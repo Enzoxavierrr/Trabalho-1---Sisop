@@ -1,0 +1,42 @@
+# Artefatos de build
+*.o
+*.a
+*.so
+*.dylib
+*.dSYM/
+
+# Executáveis
+conta-objetos-sequencial
+conta-objetos-paralelo
+build/
+bin/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Análise / profiling
+*.gcov
+*.gcda
+*.gcno
+callgrind.out.*
+massif.out.*
+core
+core.*
+
+# Logs
+*.log
+
+# Temporários do usuário
+tmp/
+scratch/
