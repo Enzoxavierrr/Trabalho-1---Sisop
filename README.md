@@ -149,15 +149,15 @@ Trabalho-1---Sisop/
 │   └── dsu/               ← Union-Find para consolidação paralela
 │       ├── dsu.h
 │       └── dsu.c
-├── tests/                 ← matrizes de teste (formato .txt)
-│   ├── m1_5x5.txt         (3 objetos)
-│   ├── m2_6x8.txt         (4 objetos)
-│   ├── m3_8x8.txt         (5 objetos)
-│   ├── m4_9x12.txt        (6 objetos)
-│   ├── m5_12x12.txt       (7 objetos)
-│   ├── tabela1_10x10.txt  (5 objetos)
-│   ├── tabela2_10x10.txt  (4 objetos)
-│   └── tabela3_10x10.txt  (6 objetos)
+├── tests/                 ← matrizes de teste (formato .c)
+│   ├── m1_5x5.c         (3 objetos)
+│   ├── m2_6x8.c         (4 objetos)
+│   ├── m3_8x8.c         (5 objetos)
+│   ├── m4_9x12.c        (6 objetos)
+│   ├── m5_12x12.c       (7 objetos)
+│   ├── tabela1_10x10.c  (5 objetos)
+│   ├── tabela2_10x10.c  (4 objetos)
+│   └── tabela3_10x10.c  (6 objetos)
 ├── results/               ← dados de benchmark e análise
 ├── slides/                ← apresentação em PDF (10 min)
 └── Testes/                ← matrizes-fonte no formato do editor do professor
@@ -204,13 +204,13 @@ Compila **sem warnings** com essas flags.
 Exemplo:
 
 ```bash
-./conta-objetos-sequencial tests/m3_8x8.txt
+./conta-objetos-sequencial tests/m3_8x8.c
 ```
 
 Saída:
 
 ```
-arquivo         : tests/m3_8x8.txt
+arquivo         : tests/m3_8x8.c
 dimensoes       : 8 x 8
 objetos         : 5
 tempo leitura   : 0.043 ms
@@ -231,29 +231,41 @@ Exemplos:
 
 ```bash
 # 4 threads, grade padrão 2x2 (4 blocos):
-./conta-objetos-paralelo tests/m3_8x8.txt 4
+./conta-objetos-paralelo tests/m3_8x8.c 4
 
 # 8 threads, grade 4x4 (16 blocos):
-./conta-objetos-paralelo tests/m3_8x8.txt 8 4 4
+./conta-objetos-paralelo tests/m3_8x8.c 8 4 4
 
 # 2 threads processando 6 blocos (2 threads pegam blocos da fila):
-./conta-objetos-paralelo tests/m3_8x8.txt 2 3 2
+./conta-objetos-paralelo tests/m3_8x8.c 2 3 2
 ```
 
 ## 7. Formato do arquivo de matriz
 
-Texto simples, com o cabeçalho seguido pelos valores:
+O programa **auto-detecta o formato pela extensão**:
 
+- **`.c` ou `.h`** — formato do [editor do professor](https://filipomor.com/editor-tabelas-c).
+  **É o formato principal** — é como o professor entrega as matrizes de teste.
+- **outra extensão** — formato texto simples (compatibilidade).
+
+### Formato `.c` do professor (principal)
+
+```c
+#define LINHAS 5
+#define COLUNAS 5
+int Tabela[LINHAS][COLUNAS] = {1, 1, 0, 0, 0,
+                               1, 1, 0, 0, 0,
+                               0, 0, 0, 1, 0,
+                               0, 0, 0, 1, 0,
+                               1, 0, 0, 0, 0,}
 ```
-<linhas> <colunas>
-<linha 1>
-<linha 2>
-...
-```
 
-Onde cada linha tem `<colunas>` valores `0` ou `1` separados por espaço.
+O parser é **liberal**: aceita qualquer espaçamento, comentários entre
+os defines, nome de variável diferente de "Tabela", vírgula sobrando no
+final. Basta ter os `#define LINHAS` e `#define COLUNAS`, seguidos de
+um `{ ... }` com os valores 0/1.
 
-Exemplo (`tests/m1_5x5.txt`):
+### Formato texto simples (fallback)
 
 ```
 5 5
@@ -264,11 +276,7 @@ Exemplo (`tests/m1_5x5.txt`):
 1 0 0 0 0
 ```
 
-**Conversão de arquivos do formato do professor** (inicializador C):
-o repositório inclui matrizes 10×10 na pasta `Testes/` no formato do
-[editor do professor](https://filipomor.com/editor-tabelas-c). Foram
-convertidas manualmente para `.txt` em `tests/` (arquivos
-`tabela1_10x10.txt` etc.).
+Primeira linha: dimensões. Demais: valores separados por espaço.
 
 ## 8. Como funciona a versão sequencial
 
@@ -400,14 +408,14 @@ do professor **passam** em ambas as versões:
 
 | Arquivo | Dimensões | Esperado | Sequencial | Paralelo (2t) | Paralelo (4t, 2×2) | Paralelo (4t, 3×3) |
 |---|---|---|---|---|---|---|
-| `m1_5x5.txt`         | 5×5    | 3 | ✅ 3 | ✅ 3 | ✅ 3 | ✅ 3 |
-| `m2_6x8.txt`         | 6×8    | 4 | ✅ 4 | ✅ 4 | ✅ 4 | ✅ 4 |
-| `m3_8x8.txt`         | 8×8    | 5 | ✅ 5 | ✅ 5 | ✅ 5 | ✅ 5 |
-| `m4_9x12.txt`        | 9×12   | 6 | ✅ 6 | ✅ 6 | ✅ 6 | ✅ 6 |
-| `m5_12x12.txt`       | 12×12  | 7 | ✅ 7 | ✅ 7 | ✅ 7 | ✅ 7 |
-| `tabela1_10x10.txt`  | 10×10  | 5 | ✅ 5 | ✅ 5 | ✅ 5 | ✅ 5 |
-| `tabela2_10x10.txt`  | 10×10  | 4 | ✅ 4 | ✅ 4 | ✅ 4 | ✅ 4 |
-| `tabela3_10x10.txt`  | 10×10  | 6 | ✅ 6 | ✅ 6 | ✅ 6 | ✅ 6 |
+| `m1_5x5.c`         | 5×5    | 3 | ✅ 3 | ✅ 3 | ✅ 3 | ✅ 3 |
+| `m2_6x8.c`         | 6×8    | 4 | ✅ 4 | ✅ 4 | ✅ 4 | ✅ 4 |
+| `m3_8x8.c`         | 8×8    | 5 | ✅ 5 | ✅ 5 | ✅ 5 | ✅ 5 |
+| `m4_9x12.c`        | 9×12   | 6 | ✅ 6 | ✅ 6 | ✅ 6 | ✅ 6 |
+| `m5_12x12.c`       | 12×12  | 7 | ✅ 7 | ✅ 7 | ✅ 7 | ✅ 7 |
+| `tabela1_10x10.c`  | 10×10  | 5 | ✅ 5 | ✅ 5 | ✅ 5 | ✅ 5 |
+| `tabela2_10x10.c`  | 10×10  | 4 | ✅ 4 | ✅ 4 | ✅ 4 | ✅ 4 |
+| `tabela3_10x10.c`  | 10×10  | 6 | ✅ 6 | ✅ 6 | ✅ 6 | ✅ 6 |
 
 Para reproduzir:
 

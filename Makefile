@@ -65,13 +65,13 @@ test: test-seq test-par
 
 test-seq: sequencial
 	@echo "== Testes sequencial =="
-	@for m in tests/m*.txt; do \
+	@for m in tests/*.c; do \
 		[ -f "$$m" ] && ./$(SEQ_BIN) "$$m"; \
 	done
 
 test-par: paralelo
 	@echo "== Testes paralelo (4 threads) =="
-	@for m in tests/m*.txt; do \
+	@for m in tests/*.c; do \
 		[ -f "$$m" ] && ./$(PAR_BIN) "$$m" 4; \
 	done
 
