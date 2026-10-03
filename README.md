@@ -425,20 +425,18 @@ make test
 
 ## 11. Análise de desempenho
 
-_A ser preenchido após rodar benchmarks em matriz grande (≥ 1000×1000).
-Ver `results/analise.md`._
+Os benchmarks foram executados em matrizes de 1200×1200, com 10 repetições
+por configuração. Os resultados completos, incluindo o perfil das entradas,
+escopo dos cronômetros e medianas por fase, estão em
+[results/analise.md](results/analise.md).
 
-Métrica principal: **aceleração** `S = T_seq / T_par`.
-
-Configurações a testar: 2, 4, 8 threads em pelo menos uma matriz grande.
-Mínimo 10 repetições por configuração; reportar mediana.
-
-**Observação esperada** (pela Lei de Amdahl): a aceleração não é linear
-no número de threads porque:
-
-- Fase 1 (divisão) e Fase 3 (consolidação) são sequenciais.
-- Fase 2 tem overhead de sincronização na fila de blocos.
-- Matrizes pequenas: overhead > ganho → paralela pode ser mais lenta.
+Resumo: a contagem sequencial teve mediana de 64,267 ms na matriz
+fragmentada e 39,541 ms na matriz de um único componente. Com BR×BC = 16×16
+(256 blocos), o tempo paralelo combinado de preparo + Fases 2–4 foi maior
+que o sequencial nas duas entradas, tanto com 4 quanto com 8 threads.
+A consolidação sequencial (Fase 3) foi o maior custo paralelo medido.
+Portanto, nestes testes, aumentar o número de threads reduziu o tempo da
+Fase 2, mas não foi suficiente para superar o custo de consolidação.
 
 ## 12. Decisões técnicas
 

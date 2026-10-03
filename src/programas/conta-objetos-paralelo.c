@@ -193,6 +193,14 @@ int main(int argc, char *argv[])
     WorkerCtx         ctx;
     double            t_leitura_ini;
     double            t_leitura_fim;
+    double            t_preparo_ini;
+    double            t_preparo_fim;
+    double            t_fase2_ini;
+    double            t_fase2_fim;
+    double            t_fase3_ini;
+    double            t_fase3_fim;
+    double            t_fase4_ini;
+    double            t_fase4_fim;
     double            t_paralelo_ini;
     double            t_paralelo_fim;
 
@@ -223,6 +231,8 @@ int main(int argc, char *argv[])
     t_leitura_ini = tempo_agora_ms();
     matriz = matriz_ler_arquivo(argv[1], &linhas, &colunas);
     t_leitura_fim = tempo_agora_ms();
+
+    t_preparo_ini = tempo_agora_ms();
 
     /* Ajusta grade se maior que a matriz. */
     if (br > linhas) br = linhas;
@@ -302,10 +312,11 @@ int main(int argc, char *argv[])
     die_if(threads == NULL, "malloc threads");
 
     /* ------------------------------------------------------------------
-     * 7) Executa o trabalho paralelo + consolidacao + contagem
-     *    (medimos so a parte que compete com a sequencial)
+     * 7) Executa e cronometra as fases 2, 3 e 4 separadamente.
      * ----------------------------------------------------------------*/
+    t_preparo_fim = tempo_agora_ms();
     t_paralelo_ini = tempo_agora_ms();
+    t_fase2_ini = t_paralelo_ini;
 
     for (i = 0; i < n_threads; i++) {
         check_pthread(pthread_create(&threads[i], NULL, worker, &ctx),
@@ -314,15 +325,19 @@ int main(int argc, char *argv[])
     for (i = 0; i < n_threads; i++) {
         check_pthread(pthread_join(threads[i], NULL), "pthread_join");
     }
+    t_fase2_fim = tempo_agora_ms();
 
     /* Fase 3: consolidar labels que atravessam blocos. */
+    t_fase3_ini = tempo_agora_ms();
     consolidar_fronteiras(labels, linhas, colunas, dsu);
+    t_fase3_fim = tempo_agora_ms();
 
     /* Fase 4: contar raizes unicas. */
+    t_fase4_ini = tempo_agora_ms();
     objetos = contar_representantes(labels, linhas, colunas, dsu,
                                     total_labels);
-
-    t_paralelo_fim = tempo_agora_ms();
+    t_fase4_fim = tempo_agora_ms();
+    t_paralelo_fim = t_fase4_fim;
 
     /* ------------------------------------------------------------------
      * 8) Relatorio
@@ -333,6 +348,10 @@ int main(int argc, char *argv[])
     printf("grade de blocos : %d x %d (%d blocos)\n", br, bc, total_blocos);
     printf("objetos         : %d\n", objetos);
     printf("tempo leitura   : %.3f ms\n", t_leitura_fim - t_leitura_ini);
+    printf("tempo preparo   : %.3f ms\n", t_preparo_fim - t_preparo_ini);
+    printf("tempo fase 2    : %.3f ms\n", t_fase2_fim - t_fase2_ini);
+    printf("tempo fase 3    : %.3f ms\n", t_fase3_fim - t_fase3_ini);
+    printf("tempo fase 4    : %.3f ms\n", t_fase4_fim - t_fase4_ini);
     printf("tempo paralelo  : %.3f ms\n", t_paralelo_fim - t_paralelo_ini);
 
     /* ------------------------------------------------------------------
