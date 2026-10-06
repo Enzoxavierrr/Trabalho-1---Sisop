@@ -40,3 +40,6 @@ core.*
 # Temporários do usuário
 tmp/
 scratch/
+
+# Matrizes grandes geradas por scripts/gerar_matrizes.py (nao versionadas)
+tests/grandes/

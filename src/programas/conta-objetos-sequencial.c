@@ -36,7 +36,12 @@ int main(int argc, char *argv[])
     matriz = matriz_ler_arquivo(argv[1], &linhas, &colunas);
     t_leitura_fim = tempo_agora_ms();
 
-    /* Fase 2: contagem de objetos. */
+    /* Fase 2: contagem de objetos.
+     * A leitura e a contagem sao cronometradas separadamente porque so a
+     * contagem e comparavel com a versao paralela - a leitura e identica nas
+     * duas e, em matrizes grandes, domina o tempo de parede (parsing de
+     * milhoes de caracteres). Misturar as duas medidas esconderia o efeito
+     * do paralelismo. */
     t_conta_ini = tempo_agora_ms();
     objetos = flood_contar_seq(matriz, linhas, colunas);
     t_conta_fim = tempo_agora_ms();

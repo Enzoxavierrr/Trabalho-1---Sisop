@@ -18,6 +18,8 @@ DSU *dsu_criar(int capacidade)
     d->parent = (int *) malloc(((size_t) capacidade) * sizeof(int));
     die_if(d->parent == NULL, "malloc DSU.parent");
 
+    /* calloc (e nao malloc) porque rank comeca em 0 para todos: uma arvore
+     * de um unico no tem altura 0. */
     d->rank = (int *) calloc((size_t) capacidade, sizeof(int));
     die_if(d->rank == NULL, "calloc DSU.rank");
 
@@ -36,7 +38,12 @@ int dsu_find(DSU *d, int x)
     int y;
     int prox;
 
-    /* Passo 1: sobe ate encontrar a raiz. */
+    /* Duas passagens iterativas em vez da versao recursiva classica
+     * (find(parent[x]) na volta da recursao): com milhoes de labels, uma
+     * arvore degenerada estouraria a pilha - mesmo motivo pelo qual a BFS
+     * do flood fill tambem e iterativa (requisito 41 do enunciado).
+     *
+     * Passo 1: sobe ate encontrar a raiz (o no cujo pai e ele mesmo). */
     raiz = x;
     while (d->parent[raiz] != raiz) {
         raiz = d->parent[raiz];
@@ -46,6 +53,8 @@ int dsu_find(DSU *d, int x)
      * para a raiz. Achata a arvore, acelerando finds futuros. */
     y = x;
     while (d->parent[y] != raiz) {
+        /* Salva o pai ANTES de sobrescrever, senao o resto do caminho
+         * ficaria inalcancavel. */
         prox = d->parent[y];
         d->parent[y] = raiz;
         y = prox;
@@ -73,6 +82,9 @@ void dsu_unir(DSU *d, int a, int b)
     } else if (d->rank[ra] > d->rank[rb]) {
         d->parent[rb] = ra;
     } else {
+        /* Empate: a escolha de quem vira raiz e arbitraria, mas a altura
+         * cresce 1 - este e o UNICO caso em que o rank aumenta, porque so
+         * aqui a arvore realmente fica mais alta. */
         d->parent[rb] = ra;
         d->rank[ra]++;
     }

@@ -49,6 +49,10 @@ static int termina_com(const char *s, const char *sufixo)
  * -------------------------------------------------------------------------*/
 static int **alocar_matriz(int linhas, int colunas)
 {
+    /* Vetor de ponteiros para linhas (e nao um unico bloco linhas*colunas)
+     * para permitir a sintaxe natural m[i][j] sem VLA nem aritmetica manual
+     * de indices - VLAs sao proibidos em C89. O custo e que as linhas podem
+     * nao ser contiguas na memoria. */
     int **m;
     int   i;
     m = (int **) malloc(((size_t) linhas) * sizeof(int *));
@@ -151,7 +155,9 @@ static int **ler_formato_c(const char *caminho, int *out_linhas, int *out_coluna
     die_if(!achou_colunas, "formato .c invalido: nao encontrou '#define COLUNAS'");
     die_if(linhas <= 0 || colunas <= 0, "dimensoes .c devem ser positivas");
 
-    /* Fase 2: avanca ate o primeiro '{' (inicio do inicializador). */
+    /* Fase 2: avanca ate o primeiro '{' (inicio do inicializador).
+     * Pular tudo ate o '{' dispensa interpretar a declaracao da variavel -
+     * nome, tipo e os [LINHAS][COLUNAS] sao irrelevantes para nos. */
     do {
         c = fgetc(fp);
         die_if(c == EOF, "formato .c invalido: nao encontrou '{' apos os defines");
@@ -161,7 +167,17 @@ static int **ler_formato_c(const char *caminho, int *out_linhas, int *out_coluna
     matriz = alocar_matriz(linhas, colunas);
 
     /* Fase 3: le LINHAS * COLUNAS valores. Aceita qualquer caractere
-     * entre eles (virgula, espaco, tab, quebra de linha), so olha 0/1. */
+     * entre eles (virgula, espaco, tab, quebra de linha), so olha 0/1.
+     *
+     * Ler caractere a caractere (em vez de fscanf("%d")) e o que torna o
+     * parser tolerante ao formato do editor do professor, que varia em
+     * espacamento, quebras de linha e virgula final. A contrapartida e que
+     * isso SO vale para dados binarios: um valor de dois digitos como "10"
+     * seria lido como dois valores, 1 e 0. Como a entrada do trabalho e
+     * sempre 0/1, a simplificacao e segura aqui.
+     *
+     * A leitura para assim que completa LINHAS*COLUNAS valores, ignorando o
+     * que vier depois (o '}' final, ';', comentarios). */
     for (i = 0; i < linhas; i++) {
         for (j = 0; j < colunas; j++) {
             do {
@@ -184,7 +200,9 @@ static int **ler_formato_c(const char *caminho, int *out_linhas, int *out_coluna
  * -------------------------------------------------------------------------*/
 int **matriz_ler_arquivo(const char *caminho, int *out_linhas, int *out_colunas)
 {
-    /* Auto-deteccao pelo sufixo do nome do arquivo. */
+    /* Auto-deteccao pelo sufixo do nome do arquivo: o .c do professor e o
+     * formato principal; qualquer outra extensao cai no .txt, usado pelas
+     * matrizes grandes geradas para os benchmarks. */
     if (termina_com(caminho, ".c") || termina_com(caminho, ".h")) {
         return ler_formato_c(caminho, out_linhas, out_colunas);
     }

@@ -47,7 +47,14 @@ typedef struct {
 } Bloco;
 
 /* Contexto compartilhado por todas as threads worker. Todas leem os mesmos
- * ponteiros; somente 'proximo_bloco' e mutex-protegido. */
+ * ponteiros; somente 'proximo_bloco' e mutex-protegido.
+ *
+ * Por que uma struct unica em vez de um argumento por thread: pthread_create
+ * passa um unico void*. Todas as threads recebem o endereco DESTE mesmo
+ * objeto (nao uma copia), e todos os campos exceto *proximo_bloco sao
+ * somente-leitura depois de preenchidos. Como o preenchimento acontece antes
+ * de pthread_create, a propria criacao da thread garante a visibilidade dos
+ * valores (relacao happens-before), sem precisar de mutex para le-los. */
 typedef struct {
     int             **matriz;
     int             **labels;
@@ -65,6 +72,13 @@ static const int DC8[8] = {-1,  0,  1, -1, 1, -1, 0, 1};
 
 /* ---------------------------------------------------------------------------
  * Worker: pega blocos da fila e os processa ate a fila esvaziar
+ *
+ * Padrao "self-scheduling": em vez de atribuir blocos fixos a cada thread na
+ * criacao, cada thread volta a fila e pega o proximo indice livre. Isso
+ * balanceia a carga quando os blocos custam tempos diferentes (um bloco cheio
+ * de objetos da muito mais trabalho que um bloco vazio) e desacopla
+ * n_threads de total_blocos: 2 threads podem processar 9 blocos, e 16 threads
+ * em 4 blocos simplesmente deixam 12 threads sem trabalho.
  * -------------------------------------------------------------------------*/
 static void *worker(void *arg)
 {
@@ -72,7 +86,12 @@ static void *worker(void *arg)
     int idx;
 
     for (;;) {
-        /* Pega o proximo bloco disponivel. */
+        /* Pega o proximo bloco disponivel.
+         * A regiao critica e minima de proposito - le e incrementa um int.
+         * O indice e copiado para 'idx' (variavel local) DENTRO do lock,
+         * para que o trabalho pesado la embaixo rode fora da regiao
+         * critica; se usassemos *proximo_bloco direto, duas threads
+         * poderiam pegar o mesmo bloco. */
         check_pthread(pthread_mutex_lock(ctx->mutex_fila), "mutex_lock");
         idx = *(ctx->proximo_bloco);
         (*(ctx->proximo_bloco))++;
@@ -85,7 +104,12 @@ static void *worker(void *arg)
         /* Processa o bloco: BFS local rotulando cada componente com um
          * label unico do range reservado. Nao ha race porque blocos sao
          * disjuntos - duas threads nunca escrevem na mesma celula de
-         * ctx->labels. */
+         * ctx->labels.
+         *
+         * O retorno (quantos labels o bloco usou) e descartado com (void)
+         * porque o range de labels ja foi reservado por tamanho de bloco na
+         * fase 1: labels sobrando no range simplesmente nunca aparecem em
+         * labels[][] e, por isso, nao sao contados na fase 4. */
         (void) flood_rotular_bloco(
             ctx->matriz, ctx->labels,
             ctx->blocos[idx].r0, ctx->blocos[idx].r1,
@@ -107,6 +131,14 @@ static void *worker(void *arg)
  *
  * Executa sequencialmente: e O(L*C) e nao vale a pena paralelizar
  * (Amdahl: a fase 2 domina). Alem disso, simplifica a sincronizacao.
+ *
+ * Nota de desempenho: a varredura cobre a matriz INTEIRA, nao apenas as
+ * fronteiras entre blocos. Isso simplifica o codigo (nao precisa enumerar
+ * quais celulas sao de borda), mas faz ~8 chamadas a dsu_unir por celula
+ * rotulada, sendo que a grande maioria e redundante - vizinhos dentro do
+ * mesmo bloco ja tem o mesmo label. Em matrizes densas essa fase passa a
+ * dominar o tempo total e e a razao pela qual a versao paralela pode ficar
+ * mais lenta que a sequencial (ver results/analise.md).
  * -------------------------------------------------------------------------*/
 static void consolidar_fronteiras(int **labels, int linhas, int colunas,
                                   DSU *dsu)
@@ -127,6 +159,8 @@ static void consolidar_fronteiras(int **labels, int linhas, int colunas,
                 nj = j + DC8[d];
                 if (ni < 0 || ni >= linhas) continue;
                 if (nj < 0 || nj >= colunas) continue;
+                /* Vizinho de fundo nao conecta nada: label 0 nao e objeto
+                 * e nao pode ser passado a DSU como se fosse. */
                 if (labels[ni][nj] == 0) continue;
                 /* dsu_unir e no-op se labels ja pertencem ao mesmo grupo. */
                 dsu_unir(dsu, labels[i][j], labels[ni][nj]);
@@ -135,7 +169,18 @@ static void consolidar_fronteiras(int **labels, int linhas, int colunas,
     }
 }
 
-/* Conta quantas raizes DISTINTAS aparecem entre todos os labels usados. */
+/* Conta quantas raizes DISTINTAS aparecem entre todos os labels usados.
+ *
+ * Por que varrer a matriz e nao os total_labels elementos da DSU: a fase 1
+ * reserva um range de labels por TAMANHO do bloco (pior caso), e quase
+ * sempre sobra range nao utilizado. Esses labels sobrando continuam sendo
+ * raizes de si mesmos na DSU; contar as raizes da DSU somaria todos eles e
+ * daria um numero absurdo de objetos. Ja a matriz contem exatamente os
+ * labels que foram realmente atribuidos a alguma celula.
+ *
+ * 'ja_visto' e um vetor indexado por label (nao por celula) marcando quais
+ * raizes ja foram contadas, para nao contar o mesmo objeto uma vez por
+ * celula que ele ocupa. */
 static int contar_representantes(int **labels, int linhas, int colunas,
                                  DSU *dsu, int total_labels)
 {
@@ -145,6 +190,8 @@ static int contar_representantes(int **labels, int linhas, int colunas,
     int   raiz;
     int   contador;
 
+    /* +1 porque os labels validos vao de 1 a total_labels: o indice
+     * total_labels precisa existir, e a posicao 0 (fundo) fica sem uso. */
     ja_visto = (char *) calloc((size_t) (total_labels + 1), sizeof(char));
     die_if(ja_visto == NULL, "calloc ja_visto");
 
@@ -207,6 +254,8 @@ int main(int argc, char *argv[])
     /* ------------------------------------------------------------------
      * 1) Parse de argumentos
      * ----------------------------------------------------------------*/
+    /* Duas formas aceitas: 3 argumentos (grade padrao 2x2) ou 5 (grade
+     * explicita). Qualquer outro numero e erro de uso. */
     if (argc != 3 && argc != 5) {
         fprintf(stderr,
                 "uso: %s <arquivo_matriz> <n_threads> [<BR> <BC>]\n",
@@ -232,9 +281,19 @@ int main(int argc, char *argv[])
     matriz = matriz_ler_arquivo(argv[1], &linhas, &colunas);
     t_leitura_fim = tempo_agora_ms();
 
+    /* Inicio do "preparo": tudo o que a versao paralela precisa fazer e a
+     * sequencial nao (alocar labels, dividir blocos, criar DSU e mutex).
+     * E cronometrado a parte porque e um custo exclusivo do paralelismo -
+     * contabiliza-lo junto com as fases 2-4 mostraria o overhead real, e
+     * deixa-lo de fora mostraria o ganho otimista; medindo separado, o
+     * relatorio pode apresentar as duas leituras. */
     t_preparo_ini = tempo_agora_ms();
 
-    /* Ajusta grade se maior que a matriz. */
+    /* Ajusta grade se maior que a matriz.
+     * Nao e cosmetico: com BR > linhas algum bloco ficaria com r1 == r0
+     * (zero linhas), e flood_rotular_bloco faria malloc(0) - que pode
+     * devolver NULL legitimamente e derrubar o programa num die_if falso.
+     * Clampando aqui, todo bloco tem pelo menos 1 linha e 1 coluna. */
     if (br > linhas) br = linhas;
     if (bc > colunas) bc = colunas;
 
@@ -269,7 +328,12 @@ int main(int argc, char *argv[])
             int idx;
             int celulas;
 
-            /* Divisao balanceada: as bordas absorvem o resto da divisao. */
+            /* Divisao balanceada sem sobra: usando r0 = bi*L/BR e
+             * r1 = (bi+1)*L/BR, o fim de um bloco e exatamente o inicio do
+             * proximo (blocos disjuntos e cobrindo tudo), e o resto da
+             * divisao se espalha entre os blocos em vez de sobrecarregar o
+             * ultimo. A multiplicacao vem antes da divisao de proposito -
+             * inverter daria truncamento e deixaria linhas de fora. */
             r0 = bi * linhas / br;
             r1 = (bi + 1) * linhas / br;
             c0 = bj * colunas / bc;
@@ -283,6 +347,13 @@ int main(int argc, char *argv[])
             blocos[idx].c1 = c1;
             blocos[idx].label_inicial = cur_label;
 
+            /* Reserva 'celulas' labels para este bloco. O pior caso real e
+             * um bloco em padrao xadrez-ortogonal, onde cada celula 1 pode
+             * ser um componente isolado; dimensionar pelo numero de celulas
+             * garante que o range nunca estoura, ao custo de reservar mais
+             * labels do que o normal. Somando todos os blocos, total_labels
+             * = L*C, logo as duas tabelas int da DSU gastam ~8 bytes por
+             * celula da matriz - o maior custo de memoria desta versao. */
             cur_label += celulas;
         }
     }
@@ -290,6 +361,11 @@ int main(int argc, char *argv[])
 
     /* ------------------------------------------------------------------
      * 5) Cria DSU com capacidade para todos os labels (mais o 0)
+     *
+     * Capacidade total_labels + 1 porque os labels sao 1..total_labels e
+     * a DSU e indexada diretamente pelo valor do label - o indice
+     * total_labels precisa ser valido. A posicao 0 existe mas nunca e
+     * usada (0 = fundo).
      * ----------------------------------------------------------------*/
     dsu = dsu_criar(total_labels + 1);
 
@@ -313,6 +389,19 @@ int main(int argc, char *argv[])
 
     /* ------------------------------------------------------------------
      * 7) Executa e cronometra as fases 2, 3 e 4 separadamente.
+     *
+     * Medir fase por fase e o que permite diagnosticar a escalabilidade:
+     * so a fase 2 e paralela, enquanto 3 e 4 sao seriais. Se o tempo total
+     * nao cai ao dobrar as threads, a separacao mostra se a culpa e da fase
+     * paralela (contencao, desbalanceamento) ou do peso das fases seriais -
+     * a fracao serial da Lei de Amdahl, medida em vez de estimada.
+     *
+     * t_paralelo_ini e t_fase2_ini recebem o mesmo instante: o intervalo
+     * "paralelo" vai do inicio da fase 2 ao fim da fase 4, equivalendo ao
+     * "tempo contagem" da versao sequencial (nenhum dos dois inclui a
+     * leitura do arquivo), o que torna os dois numeros comparaveis.
+     * A criacao e a juncao das threads ficam DENTRO da fase 2, de proposito:
+     * sao custo real do paralelismo.
      * ----------------------------------------------------------------*/
     t_preparo_fim = tempo_agora_ms();
     t_paralelo_ini = tempo_agora_ms();
@@ -322,6 +411,9 @@ int main(int argc, char *argv[])
         check_pthread(pthread_create(&threads[i], NULL, worker, &ctx),
                       "pthread_create");
     }
+    /* O join de TODAS as threads antes da fase 3 e uma barreira: garante que
+     * nenhuma celula de labels[][] ainda esta sendo escrita quando a
+     * consolidacao comecar a ler. Sem isso haveria race entre fase 2 e 3. */
     for (i = 0; i < n_threads; i++) {
         check_pthread(pthread_join(threads[i], NULL), "pthread_join");
     }
@@ -356,7 +448,16 @@ int main(int argc, char *argv[])
 
     /* ------------------------------------------------------------------
      * 9) Cleanup (libera todos os recursos)
-     * ----------------------------------------------------------------*/
+     *
+     * Fica FORA do trecho cronometrado: nao e trabalho de contagem, e a
+     * versao sequencial tambem nao mede a sua propria liberacao.
+     *
+     * O destroy do mutex vem depois dos joins (um mutex nao pode ser
+     * destruido enquanto alguma thread puder usa-lo). As matrizes alocadas
+     * linha a linha exigem liberar cada linha antes do vetor de ponteiros -
+     * na ordem inversa, o vetor com os enderecos das linhas se perderia.
+     * Esta limpeza completa e o que permite ao valgrind fechar com
+     * "no leaks are possible". */
     check_pthread(pthread_mutex_destroy(&mutex_fila), "mutex_destroy");
     dsu_destruir(dsu);
     for (i = 0; i < linhas; i++) {

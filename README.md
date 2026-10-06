@@ -423,6 +423,23 @@ Para reproduzir:
 make test
 ```
 
+### Verificação cruzada ampliada
+
+Além do `make test`, a contagem da versão paralela foi comparada com a
+sequencial em **21 matrizes × 10 configurações** de threads/grade (210
+execuções paralelas), incluindo 10 casos de borda: matriz
+1×1, linha e coluna únicas, toda 0, toda 1, moldura tocando as 4 bordas,
+xadrez diagonal (1 objeto só, por conectividade-8), pontos isolados e
+listras. Todas as 210 execuções produziram a mesma contagem.
+
+Análise dinâmica, nas duas versões, sem nenhum achado:
+
+| Ferramenta | Resultado |
+|---|---|
+| `valgrind --leak-check=full` | 0 erros, "no leaks are possible" |
+| `valgrind --tool=helgrind` | 0 erros (sem condições de corrida) |
+| `valgrind --tool=drd` | 0 erros (sem condições de corrida) |
+
 ## 11. Análise de desempenho
 
 Os benchmarks foram executados em matrizes de 1200×1200, com 10 repetições
@@ -437,6 +454,29 @@ que o sequencial nas duas entradas, tanto com 4 quanto com 8 threads.
 A consolidação sequencial (Fase 3) foi o maior custo paralelo medido.
 Portanto, nestes testes, aumentar o número de threads reduziu o tempo da
 Fase 2, mas não foi suficiente para superar o custo de consolidação.
+
+### Segunda medição (Linux, i7-13620H, 16 threads)
+
+Repetição independente em outra máquina, com 5 matrizes de 2000×2000 e
+4000×4000 e configurações de 1 a 16 threads. Confirma a conclusão acima e
+quantifica a causa:
+
+- A **Fase 2 (paralela) escala bem**: 5,4×–7,2× de 1 para 16 threads.
+- As **fases seriais** (preparo + Fases 3 e 4) representam **56%–72%** do
+  trabalho e, sozinhas, custam **mais que a versão sequencial inteira**.
+- Pela Lei de Amdahl, isso limita a aceleração a ~1,4×–1,8× sobre o tempo de
+  1 thread, que já é 2,2×–3,3× o da sequencial. Resultado: **nenhuma
+  configuração superou a sequencial**; o melhor caso foi `S = 0,74`
+  (4000×4000, 16 threads).
+- A Fase 3 chega a **piorar 23%** com mais threads: mais blocos significam
+  mais fronteiras e mais uniões a executar numa fase que é serial.
+- Causa raiz: a Fase 3 varre as `L × C` células quando bastariam as células
+  de fronteira entre blocos. Restringi-la às fronteiras derrubaria a fração
+  serial de ~0,6 para ~0,1, elevando o teto de Amdahl de ~1,6× para ~10×.
+
+Detalhamento, tabelas por fase, descrição das matrizes usadas e caminho de
+otimização em [results/analise.md](results/analise.md); dados brutos (uma
+linha por execução) em [results/resultados.csv](results/resultados.csv).
 
 ## 12. Decisões técnicas
 

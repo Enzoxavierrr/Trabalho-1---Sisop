@@ -13,7 +13,11 @@
 
 /* Offsets dos 8 vizinhos (conectividade-8, vizinhanca de Moore).
  * DR = delta row, DC = delta col.
- * Ordem: NW, N, NE, W, E, SW, S, SE. */
+ * Ordem: NW, N, NE, W, E, SW, S, SE.
+ *
+ * Ficam em arrays 'static const' no escopo do arquivo para que a dupla de
+ * funcoes abaixo compartilhe a mesma definicao: se a vizinhanca mudasse
+ * (p.ex. para conectividade-4), haveria um unico ponto de alteracao. */
 static const int DR[8] = {-1, -1, -1,  0, 0,  1, 1, 1};
 static const int DC[8] = {-1,  0,  1, -1, 1, -1, 0, 1};
 
@@ -34,7 +38,9 @@ int flood_contar_seq(int **matriz, int linhas, int colunas)
     int    nc;
     size_t cap;
 
-    /* Matriz de visitados (1 byte por celula = economico). */
+    /* Matriz de visitados (1 byte por celula = economico).
+     * calloc por linha e importante: zera tudo, e 0 significa "nao
+     * visitado". Com malloc seria lixo e o BFS leria valores invalidos. */
     visitado = (char **) malloc(((size_t) linhas) * sizeof(char *));
     die_if(visitado == NULL, "malloc visitado");
     for (i = 0; i < linhas; i++) {
@@ -44,7 +50,13 @@ int flood_contar_seq(int **matriz, int linhas, int colunas)
 
     /* Fila do BFS. Pior caso: matriz inteira e um so objeto -> L*C celulas.
      * Aloca uma unica vez, sem realloc dentro do BFS.
-     * Codifica (r,c) como um unico int: r*colunas + c. */
+     * Codifica (r,c) como um unico int: r*colunas + c.
+     *
+     * Por que L*C basta e a fila nunca transborda: cada celula so e
+     * enfileirada se 'visitado' for 0, e e marcada como visitada no MESMO
+     * instante em que entra na fila (e nao quando sai). Logo cada celula
+     * entra no maximo uma vez em toda a execucao - inclusive somando
+     * todos os objetos, porque 'visitado' nunca volta a 0. */
     cap = (size_t) linhas * (size_t) colunas;
     fila = (int *) malloc(cap * sizeof(int));
     die_if(fila == NULL, "malloc fila BFS");
@@ -67,12 +79,17 @@ int flood_contar_seq(int **matriz, int linhas, int colunas)
             head = 0;
             tail = 0;
 
-            /* Insere a semente e marca como visitada. */
+            /* Insere a semente e marca como visitada.
+             * Marcar AQUI (na insercao) e nao na remocao e o que impede a
+             * mesma celula de ser enfileirada duas vezes por dois vizinhos
+             * diferentes. */
             fila[tail++] = i * colunas + j;
             visitado[i][j] = 1;
 
             /* BFS: enquanto houver celulas na fila, expande vizinhos-8. */
             while (head < tail) {
+                /* Desenfileira e decodifica: a divisao/resto por 'colunas'
+                 * desfaz a codificacao k = r*colunas + c. */
                 k = fila[head++];
                 r = k / colunas;
                 c = k % colunas;
@@ -126,13 +143,27 @@ int flood_rotular_bloco(int **matriz, int **labels,
     int    nc;
     size_t cap_bloco;
 
-    (void) linhas; /* nao usado diretamente, mas mantido na API por clareza */
+    /* 'linhas' nao e lido aqui porque quem limita o BFS sao r1/c1, nao a
+     * borda da matriz. O parametro fica na assinatura para espelhar
+     * flood_contar_seq e documentar que a matriz e L x C. O cast (void)
+     * silencia o -Wunused-parameter exigido por -Wextra. */
+    (void) linhas;
 
-    /* Capacidade maxima da fila: numero de celulas do bloco. */
+    /* Capacidade maxima da fila: numero de celulas do bloco - mesmo
+     * argumento de flood_contar_seq (cada celula entra no maximo uma vez,
+     * pois labels[][] != 0 funciona como o 'visitado').
+     *
+     * cap_bloco nunca e 0 (o que faria malloc devolver NULL legitimamente e
+     * disparar um die_if falso): o chamador garante BR <= linhas e
+     * BC <= colunas, e com a divisao r0 = bi*L/BR cada bloco recebe pelo
+     * menos uma linha e uma coluna. */
     cap_bloco = (size_t) (r1 - r0) * (size_t) (c1 - c0);
     fila = (int *) malloc(cap_bloco * sizeof(int));
     die_if(fila == NULL, "malloc fila bloco");
 
+    /* O range reservado para este bloco comeca em proximo_label + 1: o
+     * label_atual so e usado depois do pre-incremento abaixo. Assim o valor
+     * 0 fica livre para significar "celula sem label" em labels[][]. */
     label_atual = proximo_label;
     atribuidos = 0;
 
@@ -151,6 +182,9 @@ int flood_rotular_bloco(int **matriz, int **labels,
             head = 0;
             tail = 0;
 
+            /* A codificacao usa 'colunas' (largura GLOBAL da matriz), nao a
+             * largura do bloco: assim r e c decodificados ja sao coordenadas
+             * absolutas e podem ser comparados direto com r0/r1/c0/c1. */
             fila[tail++] = i * colunas + j;
             labels[i][j] = label_atual;
 
@@ -164,7 +198,15 @@ int flood_rotular_bloco(int **matriz, int **labels,
                     nr = r + DR[d];
                     nc = c + DC[d];
 
-                    /* Fica dentro do bloco - IMPORTANTE! */
+                    /* Fica dentro do bloco - IMPORTANTE!
+                     * Estes dois testes substituem a checagem de borda da
+                     * matriz: como 0 <= r0 < r1 <= linhas, quem esta dentro
+                     * do bloco esta necessariamente dentro da matriz.
+                     *
+                     * Parar na fronteira e intencional, nao uma limitacao:
+                     * sem isso duas threads escreveriam na mesma celula
+                     * (race). Um objeto cortado pela fronteira fica com um
+                     * label por bloco, e a fase de consolidacao os reune. */
                     if (nr < r0 || nr >= r1) continue;
                     if (nc < c0 || nc >= c1) continue;
 
