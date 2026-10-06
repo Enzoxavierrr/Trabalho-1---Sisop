@@ -4,7 +4,7 @@
 **Professor:** Filipo Mór
 **Instituição:** PUCRS — Escola Politécnica
 
-Autoria e matrículas: ver o relatório técnico em [`results/analise.md`](results/analise.md).
+Autoria e matrículas: ver o [relatório técnico](RelatorioTecnico).
 
 ---
 
