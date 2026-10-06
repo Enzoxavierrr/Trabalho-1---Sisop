@@ -2,7 +2,8 @@
 
 tags: #sisop #trabalho1 #cronograma #dupla
 
-> **A definir:** nome do colega da dupla + prazo de entrega no Moodle.
+> **Dupla:** Enzo Xavier e Rafael Menchik Birmann.
+> **A definir:** prazo de entrega no Moodle.
 
 ---
 
@@ -12,9 +13,18 @@ tags: #sisop #trabalho1 #cronograma #dupla
 
 O enunciado exige (item 13, "Autoria e domínio"): *ambos devem ser capazes de explicar todo o código*. Então dividir por módulos mas fazer **pair review** obrigatório antes de cada commit importante.
 
-## Divisão sugerida
+## Contribuições já realizadas por Rafael
 
-| Área | Enzo | Colega |
+- Executou os benchmarks nas matrizes de 1200×1200, com 10 repetições por
+  configuração, e coletou os resultados para 4 e 8 threads.
+- Adicionou a medição dos tempos de preparo e das Fases 2, 3 e 4 no programa
+  paralelo.
+- Escreveu a análise de desempenho em `results/analise.md` e atualizou a seção
+  correspondente no README com o resumo dos resultados.
+
+## Divisão de responsabilidades
+
+| Área | Enzo | Rafael |
 |---|---|---|
 | Setup (Makefile, estrutura, README inicial) | ✅ | 👀 revisa |
 | Módulo `matriz.c` (I/O) | 👀 | ✅ |
@@ -23,8 +33,9 @@ O enunciado exige (item 13, "Autoria e domínio"): *ambos devem ser capazes de e
 | `conta-objetos-sequencial.c` | 👀 | ✅ |
 | `conta-objetos-paralelo.c` (Fase 2 — labeling) | ✅ | 👀 |
 | Consolidação (Fase 3 — fronteiras) | ✅ | 👀 |
-| Matrizes de teste + scripts de benchmark | 👀 | ✅ |
-| Análise de desempenho + gráficos | ✅ | 👀 |
+| Instrumentação dos tempos por fase no programa paralelo | 👀 | ✅ |
+| Execução dos benchmarks e coleta de resultados | 👀 | ✅ |
+| Análise de desempenho (`results/analise.md`) e resumo no README | 👀 | ✅ |
 | Slides | ✅ + ✅ | ✅ + ✅ |
 | Ensaio da apresentação | ✅ + ✅ | ✅ + ✅ |
 
