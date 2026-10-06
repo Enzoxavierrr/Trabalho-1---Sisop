@@ -1,0 +1,431 @@
+# Relatório técnico — Contagem de objetos em matriz binária
+
+> **Disciplina:** Sistemas Operacionais — 2026/II
+> **Professor:** Filipo Mór
+> **Instituição:** PUCRS — Escola Politécnica
+> **Repositório:** [Enzoxavierrr/Trabalho-1---Sisop](https://github.com/Enzoxavierrr/Trabalho-1---Sisop)
+> **Data:** 06/10/2026
+> **Commit de referência:** `0b27e985e16a59b95e2fc40477fda21c62490b71` (`main`)
+
+## Identificação
+
+| Campo | Informação |
+|---|---|
+| Integrante 1 | Enzo Xavier |
+| Matrícula do integrante 1 | 24102216 |
+| Integrante 2 | Rafael Menchik Birmann |
+| Matrícula do integrante 2 | 24200656 |
+| Integrante 3 | Diego Schaeffer |
+| Matrícula do integrante 3 | 24200497 |
+| Integrante 4 | Artur Schultz |
+| Matrícula do integrante 4 | 24200046 |
+| Modalidade | Quarteto |
+| Turma | Não informada no repositório |
+| Estratégia paralela | Pthreads |
+| Plataforma de desenvolvimento/benchmark | Windows; versão não registrada |
+| Plataforma POSIX de entrega | Linux ou macOS, conforme o enunciado; validação nessas plataformas não registrada |
+
+## Resumo
+
+Este trabalho implementa a contagem de componentes conexos em matrizes binárias sob conectividade-8. A versão sequencial percorre a matriz e inicia uma busca em largura (BFS) iterativa para cada célula de primeiro plano ainda não visitada. A versão paralela divide a matriz em blocos retangulares e distribui esses blocos por uma fila compartilhada consumida por threads Pthreads. Cada bloco recebe uma faixa exclusiva de rótulos, evitando disputa durante a rotulagem local. Em seguida, uma estrutura Union-Find unifica rótulos vizinhos, inclusive em conexões diagonais entre blocos, e conta os representantes distintos. A documentação registra resultados corretos nas cinco matrizes obrigatórias e em três matrizes adicionais, iguais entre as versões. Nos benchmarks de matrizes 1200×1200, repetidos dez vezes, a paralela com quatro e oito threads foi mais lenta que a sequencial nas duas entradas analisadas. A Fase 3, sequencial e responsável pela consolidação, foi o maior custo paralelo observado. Assim, o projeto demonstra paralelismo efetivo e correção documentada, mas não obteve aceleração nas configurações medidas.
+
+**Palavras-chave:** Sistemas Operacionais; Pthreads; conectividade-8; BFS; Union-Find; componentes conexos.
+
+## 1. Problema e requisitos
+
+Cada posição da matriz contém `0` (fundo) ou `1` (primeiro plano). Um objeto é um componente de posições `1` conectadas por qualquer um dos oito vizinhos, diagonais incluídas.
+
+| Requisito | Implementação/evidência |
+|---|---|
+| C89/C90 | `Makefile` usa `-std=c89 -Wall -Wextra -pedantic -O2`. |
+| Versão sequencial | `src/programas/conta-objetos-sequencial.c` e `src/flood/flood.c`. |
+| Paralelismo efetivo | Threads executam BFS de rotulagem em blocos distintos. |
+| Número de trabalhadores configurável | Argumento `<n_threads>` na interface paralela. |
+| Conectividade-8 e consolidação | `src/programas/conta-objetos-paralelo.c` verifica os oito vizinhos e une rótulos com DSU. |
+| Sincronização | Um mutex protege a retirada do próximo bloco da fila. |
+| Reprodutibilidade de compilação | `Makefile` na raiz. |
+
+## 2. Organização do repositório
+
+```text
+.
+├── Makefile
+├── README.md
+├── RelatorioTecnico.md
+├── Trabalho 1/
+│   ├── 01 - Enunciado e Critérios.md
+│   ├── 02 - Decisões de Arquitetura.md
+│   ├── 03 - Algoritmo Sequencial.md
+│   ├── 04 - Algoritmo Paralelo.md
+│   ├── 05 - Consolidação com Union-Find.md
+│   ├── 06 - Plano de Testes.md
+│   ├── 07 - Divisão de Tarefas.md
+│   └── 08 - Checklist de Entrega.md
+├── src/
+│   ├── dsu/       (Union-Find)
+│   ├── flood/     (BFS sequencial e rotulagem local)
+│   ├── matriz/    (leitura e liberação da matriz)
+│   ├── programas/ (entradas sequencial e paralela)
+│   └── util/      (erros e temporização)
+├── tests/         (cinco matrizes obrigatórias e três adicionais)
+├── results/
+│   └── analise.md
+└── slides/
+```
+
+## 3. Ambiente, compilação e execução
+
+### 3.1 Ambiente
+
+| Item | Registro disponível |
+|---|---|
+| Processador | Intel Core i7-1255U |
+| Núcleos/processadores lógicos | 10 núcleos, 12 processadores lógicos (conforme `results/analise.md`) |
+| Memória RAM | Não registrada |
+| Sistema operacional dos benchmarks | Windows; versão não registrada |
+| Compilador | GCC; versão usada nos benchmarks não registrada |
+| Linguagem | C89/C90 |
+| APIs de concorrência | Pthreads (`pthread_create`, `pthread_join`, mutex) |
+| Relógio | `clock_gettime(CLOCK_MONOTONIC, ...)` |
+| Flags | `-std=c89 -Wall -Wextra -pedantic -O2`; link com `-pthread` |
+
+O enunciado pede compatibilidade com Linux ou macOS. A análise de desempenho documentada foi obtida no Windows; não há registro de execução de compilação/testes em Linux ou macOS.
+
+### 3.2 Compilar
+
+Em um ambiente com `make`, compilador C e suporte a Pthreads:
+
+```sh
+make clean
+make
+```
+
+O `Makefile` compila os programas com C89, avisos habilitados e otimização `-O2`, e liga com `-pthread`.
+
+### 3.3 Executar
+
+```sh
+./conta-objetos-sequencial tests/m3_8x8.c
+./conta-objetos-paralelo tests/m3_8x8.c 4
+./conta-objetos-paralelo tests/m3_8x8.c 8 4 4
+```
+
+A interface paralela é:
+
+```text
+conta-objetos-paralelo <arquivo_matriz> <n_threads> [<BR> <BC>]
+```
+
+`BR` e `BC` definem a grade de blocos e, se omitidos, valem `2` e `2`. A entrada pode usar o formato C produzido pelo editor de matrizes (`.c`/`.h`) ou texto simples com dimensões na primeira linha e valores binários a seguir. Os programas exibem o arquivo, dimensões e quantidade de objetos; a versão sequencial também exibe leitura e contagem, e a paralela exibe leitura, preparo, Fases 2–4 e tempo paralelo.
+
+Exemplo de formato texto:
+
+```text
+2 3
+1 0 0
+0 1 0
+```
+
+Com conectividade-8, as duas células `1` diagonais representam um único objeto.
+
+## 4. Arquitetura e estruturas de dados
+
+### 4.1 Fluxo
+
+```mermaid
+flowchart TD
+    A["Ler matriz"] --> B["Dividir em BR × BC blocos e reservar rótulos"]
+    B --> C["Threads rotulam componentes locais com BFS"]
+    C --> D["Percorrer rótulos e unir vizinhos-8 na DSU"]
+    D --> E["Contar raízes distintas"]
+    E --> F["Liberar recursos e imprimir tempos"]
+```
+
+### 4.2 Estruturas principais
+
+| Estrutura | Representação e finalidade | Compartilhamento/proteção |
+|---|---|---|
+| Matriz de entrada | `int **`; valores `0`/`1`, somente leitura pelas threads | Compartilhada, sem escrita concorrente |
+| Visitados sequencial | `char **`; marca células já exploradas | Usada apenas na versão sequencial |
+| Rótulos paralelos | `int **`; cada célula recebe zero ou um identificador | Compartilhada; cada thread escreve somente no bloco que retirou |
+| Fila BFS | `int *`; codifica `(linha, coluna)` como `linha * colunas + coluna` | Local a cada chamada de rotulagem |
+| Blocos | Vetor de retângulos com limites e início da faixa de rótulos | Compartilhado e imutável durante o processamento |
+| Fila de blocos | Índice compartilhado `proximo_bloco` | Protegido por `pthread_mutex_t` |
+| DSU | Vetores `parent` e `rank` | Lida/escrita sequencialmente após o `join` das threads |
+
+## 5. Implementação sequencial
+
+### 5.1 Algoritmo
+
+`flood_contar_seq` aloca uma matriz de visitados e uma fila com capacidade para até `linhas × colunas` posições. Percorre a entrada em ordem de linhas e colunas; para cada `1` não visitado, incrementa o contador e executa BFS iterativa. A busca verifica os oito deslocamentos, ignora posições fora dos limites, fundo e posições visitadas, e marca cada posição antes de enfileirá-la. Ao terminar, libera a fila e a matriz auxiliar.
+
+```text
+objetos = 0
+para cada célula (i, j):
+    se matriz[i][j] == 1 e não visitada:
+        objetos++
+        BFS a partir de (i, j), marcando e enfileirando vizinhos-8
+liberar estruturas auxiliares
+retornar objetos
+```
+
+### 5.2 Complexidade
+
+| Aspecto | Análise |
+|---|---|
+| Tempo | `O(L × C)`: cada célula é visitada no máximo uma vez; cada visita examina oito vizinhos. |
+| Espaço | `O(L × C)`: visitados e, no pior caso, fila para toda a matriz. |
+| Recursão | Não há recursão no flood fill; a BFS usa fila explícita. |
+
+## 6. Implementação paralela
+
+### 6.1 Modelo e decomposição
+
+A paralela usa Pthreads e uma fila compartilhada de blocos. A quantidade de threads é o segundo argumento obrigatório; `BR` e `BC` controlam a grade retangular. Para o bloco `(bi, bj)`, os limites são calculados por divisão inteira proporcional:
+
+```text
+r0 = bi * linhas / BR       r1 = (bi + 1) * linhas / BR
+c0 = bj * colunas / BC      c1 = (bj + 1) * colunas / BC
+```
+
+Assim, as partes restantes da divisão ficam distribuídas entre os blocos. Se a grade exceder as dimensões da matriz, os valores são reduzidos às dimensões correspondentes. O número de blocos pode ser maior que o de threads: cada trabalhador obtém outro bloco da fila até ela esvaziar. A execução não exige que a matriz seja divisível igualmente.
+
+### 6.2 Etapas e paralelismo efetivo
+
+| Etapa | Execução | Responsável |
+|---|---|---|
+| Leitura e preparação da matriz | Sequencial | Thread principal |
+| Particionamento e reserva das faixas de rótulos | Sequencial | Thread principal |
+| BFS/rotulagem local | Paralela | Threads de trabalho, cada qual em blocos distintos |
+| Consolidação dos rótulos | Sequencial | Thread principal |
+| Contagem das raízes | Sequencial | Thread principal |
+
+Cada bloco recebe previamente uma faixa de identificadores com tamanho suficiente para, no máximo, um rótulo por célula do bloco. Portanto, os rótulos globais não colidem e não é necessário mutex para reservá-los durante a Fase 2.
+
+### 6.3 Sincronização e comunicação
+
+| Dado/recurso | Risco | Mecanismo e escopo |
+|---|---|---|
+| Índice do próximo bloco | Duas threads retirarem o mesmo bloco ou perderem atualização | Mutex protege leitura/incremento do índice |
+| Matriz de entrada | Corrida de escrita | Somente leitura após carregar |
+| Matriz de rótulos | Escritas simultâneas na mesma célula | Blocos disjuntos; cada thread escreve apenas no bloco atribuído |
+| DSU | Atualizações concorrentes | A consolidação ocorre somente depois dos `pthread_join`, na thread principal |
+
+As operações de criação/junção de threads e de mutex passam pelo helper `check_pthread`, que verifica o código de retorno. O mutex é usado em uma região curta para retirar um bloco; não há locks aninhados. Com uma única fila e sem espera circular entre locks, o desenho não introduz ciclo de deadlock. Os retornos de `pthread_create`, `pthread_join`, operações do mutex e `clock_gettime` são verificados no código.
+
+## 7. Consolidação dos componentes
+
+### 7.1 Rótulos e equivalências
+
+Cada bloco é rotulado de forma independente por `flood_rotular_bloco`. Os intervalos reservados antes da criação das threads mantêm distintos os identificadores de componentes locais. A soma das contagens locais não seria suficiente: um mesmo objeto pode ter sido dividido em vários blocos e recebido rótulos diferentes.
+
+### 7.2 Fronteiras e conectividade
+
+A implementação percorre a matriz de rótulos e verifica todos os oito vizinhos de cada célula rotulada. Quando os dois rótulos são diferentes de zero, chama `dsu_unir`. Isso inclui conexões horizontais, verticais, diagonais e o encontro de quatro blocos. A varredura é mais ampla do que somente as bordas: visita também vizinhos dentro do mesmo bloco, que já compartilham componente e são no-op na DSU.
+
+### 7.3 Union-Find e contagem final
+
+`dsu_unir` combina conjuntos por rank; `dsu_find` aplica compressão de caminho. A DSU é dimensionada pelo número máximo reservado de rótulos. Após a consolidação sequencial, `contar_representantes` percorre as células rotuladas, encontra a raiz de cada rótulo e conta cada raiz uma única vez. Como a fase ocorre após as threads terminarem, a DSU não requer mutex.
+
+### 7.4 Exemplo: matriz obrigatória 3
+
+Na matriz `tests/m3_8x8.c`, o grupo central 2×2 ocupa as células `(3,3)`, `(3,4)`, `(4,3)` e `(4,4)`. Com grade 2×2, essas células ficam em quatro blocos distintos. Cada rotulagem local pode atribuir um rótulo distinto a cada parte; as adjacências ortogonais e diagonais entre os quatro rótulos provocam as uniões na DSU. O objeto passa a contar como uma raiz global. O repositório não registra os valores concretos dos rótulos dessa execução, portanto o exemplo descreve as equivalências sem inventar IDs.
+
+| Partes relevantes | Relação examinada | Resultado da consolidação |
+|---|---|---|
+| `(3,3)` e `(3,4)` | Adjacência horizontal entre blocos | Une os rótulos locais |
+| `(3,3)` e `(4,3)` | Adjacência vertical entre blocos | Une os rótulos locais |
+| `(3,3)` e `(4,4)` | Adjacência diagonal no encontro dos quatro blocos | Une os rótulos locais |
+| Quatro células do grupo central | Caminhos ortogonais/diagonais | Uma raiz e um objeto global |
+
+## 8. Correção e testes funcionais
+
+### 8.1 Procedimento e evidência
+
+O `README.md` registra que as cinco matrizes obrigatórias e três tabelas adicionais foram executadas nas versões sequencial e paralela, com resultados iguais aos esperados. O relatório de desempenho também registra igualdade entre as versões nas duas matrizes grandes e nas oito entradas pequenas. O alvo `make test` executa as duas versões sobre os arquivos `tests/*.c`; no alvo paralelo, usa quatro threads e a grade padrão 2×2.
+
+As evidências do repositório são resultados documentados, não logs individuais versionados. A execução novamente no Linux/macOS e logs de cada configuração não estão registrados.
+
+### 8.2 Matrizes obrigatórias
+
+| Exemplo/arquivo | Dimensões | Esperado | Sequencial | Paralelo documentado | Estado |
+|---|---:|---:|---:|---:|---|
+| `tests/m1_5x5.c` | 5×5 | 3 | 3 | 3 | Conforme documentação |
+| `tests/m2_6x8.c` | 6×8 | 4 | 4 | 4 | Conforme documentação |
+| `tests/m3_8x8.c` | 8×8 | 5 | 5 | 5 | Conforme documentação |
+| `tests/m4_9x12.c` | 9×12 | 6 | 6 | 6 | Conforme documentação |
+| `tests/m5_12x12.c` | 12×12 | 7 | 7 | 7 | Conforme documentação |
+
+### 8.3 Entradas adicionais documentadas
+
+| Arquivo/caso | Dimensões | Esperado e resultado documentado |
+|---|---:|---:|
+| `tests/tabela1_10x10.c` | 10×10 | 5 |
+| `tests/tabela2_10x10.c` | 10×10 | 4 |
+| `tests/tabela3_10x10.c` | 10×10 | 6 |
+| Matriz fragmentada do benchmark | 1200×1200 | 51.284, igual nas versões |
+| Matriz preenchida do benchmark | 1200×1200 | 1, igual nas versões |
+
+Os testes unitários de matriz toda zero, diagonal isolada e matriz 1×1 aparecem no plano de testes, mas não há evidência de que tenham sido executados separadamente. Os arquivos de entrada grandes do benchmark foram temporários e não estão no repositório.
+
+## 9. Avaliação de desempenho
+
+### 9.1 Metodologia
+
+| Parâmetro | Valor documentado |
+|---|---|
+| Tamanho | Matrizes 1200×1200 |
+| Entradas | Fragmentada, semente 123, 51.284 objetos; e matriz totalmente preenchida, um objeto |
+| Configuração de blocos | 16×16 = 256 blocos |
+| Threads | 4 e 8; configuração de 2 threads não medida |
+| Repetições | 10 por entrada e configuração |
+| Medida representativa | Mediana |
+| Compilação | GCC, `-std=c89 -Wall -Wextra -pedantic -O2`, `-pthread` |
+| Ambiente | Windows, Intel Core i7-1255U, 10 núcleos e 12 processadores lógicos |
+| Cronômetro | `clock_gettime(CLOCK_MONOTONIC, ...)` |
+| Dados brutos | Amostras individuais não foram preservadas; medianas e metodologia estão em `results/analise.md` |
+
+O tempo sequencial mede `flood_contar_seq`, sem leitura do arquivo. O tempo paralelo combinado soma preparo e Fases 2–4 por execução; não inclui leitura nem limpeza. As medianas combinadas foram calculadas a partir dos tempos combinados individuais, e não pela soma das medianas de etapas.
+
+### 9.2 Resultados e métricas
+
+`S(p) = T_sequencial / T_paralelo(p)` e `E(p) = S(p) / p`. Os valores abaixo usam o tempo paralelo combinado e as medianas publicadas em `results/analise.md`.
+
+| Entrada | Versão | Threads | Objetos | Sequencial (ms) | Paralelo combinado (ms) | Aceleração S | Eficiência E |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Fragmentada | Sequencial | 1 | 51.284 | 64,267 | — | 1,0000 | 1,0000 |
+| Fragmentada | Paralela | 4 | 51.284 | — | 113,665 | 0,5654 | 0,1414 |
+| Fragmentada | Paralela | 8 | 51.284 | — | 91,780 | 0,7002 | 0,0875 |
+| Um componente | Sequencial | 1 | 1 | 39,541 | — | 1,0000 | 1,0000 |
+| Um componente | Paralela | 4 | 1 | — | 121,367 | 0,3258 | 0,0814 |
+| Um componente | Paralela | 8 | 1 | — | 110,327 | 0,3584 | 0,0448 |
+
+Tempos por fase (ms), também medianas:
+
+| Entrada | Threads | Preparo | Fase 2: rotulagem | Fase 3: consolidação | Fase 4: contagem |
+|---|---:|---:|---:|---:|---:|
+| Fragmentada | 4 | 7,991 | 27,150 | 65,522 | 14,790 |
+| Fragmentada | 8 | 7,160 | 17,127 | 53,743 | 13,530 |
+| Um componente | 4 | 6,102 | 22,137 | 87,556 | 4,410 |
+| Um componente | 8 | 6,287 | 15,676 | 82,896 | 3,872 |
+
+Não há arquivo CSV com as dez medições individuais nem gráficos no repositório; por isso, não são apresentados dados brutos ou figuras inexistentes.
+
+### 9.3 Análise
+
+O paralelo combinado foi mais lento que a contagem sequencial nas duas entradas. Na matriz fragmentada, os tempos paralelos foram aproximadamente 1,77× (quatro threads) e 1,43× (oito threads) o tempo sequencial. Na matriz preenchida, foram aproximadamente 3,07× e 2,79×, respectivamente. Assim, `S < 1` em todas as configurações; aumentar as threads melhorou o tempo paralelo observado, mas não foi suficiente para superar a versão sequencial.
+
+A Fase 2 ficou mais rápida com oito threads em ambas as entradas. A Fase 3, entretanto, foi a etapa mais custosa: 53,743–65,522 ms na matriz fragmentada e 82,896–87,556 ms na preenchida. A implementação percorre todos os rótulos e seus oito vizinhos, em vez de limitar a análise às fronteiras dos blocos; esse custo sequencial e o preparo da paralela reduzem a aceleração. As conclusões se aplicam somente às matrizes, ao hardware, ao tamanho de bloco e às configurações medidas.
+
+## 10. Erros, recursos e qualidade
+
+### 10.1 Chamadas e recursos
+
+| Chamada/recurso | Verificação e tratamento documentados |
+|---|---|
+| `pthread_create`, `pthread_join`, mutex | Código de retorno passado a `check_pthread`; falha reportada e encerra a execução |
+| `clock_gettime` | Retorno verificado; falha reportada por `die_if` |
+| Alocações | Ponteiros verificados com `die_if`; falha reportada e encerra a execução |
+| Recursos no caminho normal | Mutex destruído; DSU, rótulos, blocos, threads, matriz e estruturas auxiliares liberados |
+| `fork`/`waitpid`/semafóros | Não se aplicam; o programa usa Pthreads |
+
+### 10.2 Verificações registradas
+
+| Verificação | Evidência disponível |
+|---|---|
+| Padrão C e avisos | `Makefile` configura C89, `-Wall -Wextra -pedantic`; README declara compilação sem avisos. Log de compilação não versionado. |
+| Testes funcionais | Resultados resumidos no README e em `results/analise.md`; log bruto não versionado. |
+| Vazamentos de memória | Não há resultado de Valgrind, LeakSanitizer ou ferramenta equivalente registrado. |
+| Condições de corrida | Não há resultado de ThreadSanitizer, Helgrind ou ferramenta equivalente registrado. |
+| Compatibilidade POSIX | Ainda precisa ser registrada por compilação e execução em Linux ou macOS. |
+
+### 10.3 Separação de responsabilidades
+
+`matriz/` implementa a entrada; `flood/` contém a BFS sequencial e a rotulagem local; `dsu/` implementa as uniões; `util/` fornece tratamento de erros e relógio; `programas/` contém os pontos de entrada. A sincronização da fila e as etapas globais ficam na implementação paralela. O `Makefile` compila as duas versões e executa os testes presentes em `tests/`.
+
+## 11. Limitações e decisões de projeto
+
+| Decisão/limitação | Impacto | Alternativa | Motivo/estado |
+|---|---|---|---|
+| Pthreads e memória compartilhada | Evita cópia/IPC da matriz; exige controle de dados compartilhados | Processos POSIX | Mutex curto e regiões de escrita disjuntas simplificam a sincronização |
+| BFS iterativa | Usa fila de até o tamanho da matriz/bloco | DFS recursiva | Evita recursão profunda e estouro da pilha |
+| DSU sequencial após o `join` | Consolidação não escala com o número de threads | DSU paralela com sincronização | Evita locks na estrutura de união; medição mostrou que a fase é o principal custo |
+| Varredura completa dos rótulos na Fase 3 | Trabalho adicional além das fronteiras; prejudica o tempo paralelo | Examinar somente pares de células em fronteiras de blocos | Otimização futura que deve manter cobertura de vizinhança-8 e ser testada |
+| Faixas de rótulos dimensionadas pelo total de células dos blocos | DSU pode reservar mais posições que o número real de componentes | Alocação/compactação posterior dos rótulos | Simplifica a atribuição concorrente e evita contenção |
+| Medições restritas a 4 e 8 threads e a duas matrizes | Não caracteriza outros tamanhos, densidades ou contagens de threads | Mais cenários e configurações | Os dados existentes são exploratórios, não uma estimativa universal |
+| Amostras brutas e gráficos não versionados | Limita reanálise estatística independente | CSV e scripts/figuras versionados | Artefatos ainda não constam no repositório |
+
+## 12. Conclusão
+
+O projeto implementa as duas versões pedidas: uma referência sequencial com BFS e uma versão concorrente que distribui o trabalho de rotulagem local entre threads. A documentação registra resultados iguais aos esperados nas cinco matrizes obrigatórias e em três matrizes adicionais; também registra igualdade entre as versões nas duas matrizes usadas no benchmark. A decomposição em blocos exige consolidar componentes que atravessam regiões, e a DSU sequencial preserva as conexões horizontais, verticais e diagonais sem sincronização concorrente nessa etapa.
+
+Nos testes de desempenho registrados, a versão paralela não superou a sequencial. A Fase 2 melhorou com oito threads, mas o custo de preparo e, sobretudo, da varredura sequencial da Fase 3 dominou o tempo. O resultado evidencia que criar threads não garante aceleração: a granularidade, a contenção e o trabalho serial precisam ser medidos. Como próximos passos, recomenda-se otimizar a consolidação para percorrer apenas as fronteiras relevantes, preservar cada amostra em CSV, gerar gráficos e executar os testes em Linux ou macOS, além de medir com ferramentas de memória e concorrência.
+
+## 13. Vídeo de apresentação
+
+| Campo | Informação |
+|---|---|
+| Plataforma e link | Não informados |
+| Duração e privacidade | Não informadas |
+| Estado | Link do vídeo deve ser incluído antes da entrega, se exigido |
+
+## 14. Contribuições dos integrantes
+
+As contribuições abaixo foram registradas com base na divisão de tarefas e no histórico Git consultado em 06/10/2026. Não há percentuais de esforço registrados.
+
+| Atividade | Enzo Xavier | Rafael Menchik Birmann | Evidência |
+|---|---|---|---|
+| Estrutura inicial, módulos e implementação sequencial/paralela | Responsável pela implementação | Revisão/estudo do código, conforme divisão de tarefas | Histórico de commits e `Trabalho 1/07 - Divisão de Tarefas.md` |
+| Instrumentação dos tempos por fase | Revisão | Responsável | Commit `0b27e98` e fonte paralela |
+| Execução dos benchmarks e coleta de medianas | Revisão | Responsável | Commit `0b27e98` e `results/analise.md` |
+| Análise de desempenho e resumo no README | Revisão | Responsável | Commit `0b27e98`, README e `results/analise.md` |
+| Slides e ensaio | Trabalho conjunto planejado | Trabalho conjunto planejado | Execução ainda não registrada |
+
+Ambos os integrantes devem revisar o código completo e ser capazes de explicar as decisões, a sincronização e a consolidação antes da apresentação, conforme o requisito de autoria e domínio.
+
+## 15. Ferramentas, bibliotecas e referências
+
+| Recurso | Finalidade | Registro |
+|---|---|---|
+| GCC e Make | Compilação e automação pelo `Makefile` | Flags e comandos documentados no repositório |
+| Pthreads e APIs POSIX de tempo | Threads, mutex e temporização monotônica | Usados pelo código C |
+| Git/GitHub | Versionamento e hospedagem | Repositório indicado no cabeçalho |
+| Editor de matrizes do professor | Formato de entrada das tabelas | Referenciado no README: `https://filipomor.com/editor-tabelas-c` |
+| Wikipedia — Union-Find e connected-component labeling | Leituras listadas no README | Links registrados em `README.md`; uso específico na implementação não detalhado |
+| Assistente de IA (Copilot) | Apoio editorial para preencher este relatório a partir dos artefatos existentes | O conteúdo técnico deve ser revisado pelos autores antes da entrega |
+
+## 16. Estado da entrega
+
+| Item | Estado com base nos arquivos disponíveis |
+|---|---|
+| Implementações sequencial e paralela | Presentes |
+| Testes das cinco matrizes obrigatórias | Resultados positivos registrados na documentação |
+| Igualdade sequencial/paralela | Registrada nas oito entradas pequenas e nas duas matrizes de benchmark |
+| Análise de desempenho | `results/analise.md`, com método, medianas e interpretação |
+| CSV de amostras e gráficos | Não presentes |
+| Valgrind/ThreadSanitizer/Helgrind | Resultados não registrados |
+| Validação Linux/macOS | Não registrada; benchmarks descritos foram executados no Windows |
+| Matrículas e turma | informadas |
+| Vídeo e slides finais | artefatos concluídos |
+| Commit avaliado | `0b27e985e16a59b95e2fc40477fda21c62490b71` |
+
+## Apêndice A — Comandos reproduzíveis
+
+```sh
+# Compilar
+make clean
+make
+
+# Rodar uma matriz obrigatória
+./conta-objetos-sequencial tests/m3_8x8.c
+./conta-objetos-paralelo tests/m3_8x8.c 4
+
+# Executar a bateria disponível
+make test
+
+# Exemplo da configuração paralela usada nos benchmarks
+./conta-objetos-paralelo <matriz-1200x1200> 4 16 16
+./conta-objetos-paralelo <matriz-1200x1200> 8 16 16
+```
+
+Os arquivos 1200×1200 usados no benchmark foram temporários e não estão versionados; os resultados publicados não podem ser reproduzidos exatamente sem regenerar as mesmas entradas.
