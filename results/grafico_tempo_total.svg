@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1198" height="700" viewBox="0 0 1198 700">
+<title>Tempo combinado por configuração</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="599.0" y="28.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#273444" font-weight="bold">Tempo combinado por configuração</text>
+<text x="599.0" y="49.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#596775" font-weight="normal">Preparo + Fases 2–4 (mediana por execução); cada amostra usa escala própria</text>
+<text x="223.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand30 2000×2000</text>
+<line x1="77.0" y1="333.0" x2="395.0" y2="333.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="337.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="77.0" y1="277.2" x2="395.0" y2="277.2" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="281.2" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="77.0" y1="221.5" x2="395.0" y2="221.5" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="225.5" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<line x1="77.0" y1="165.8" x2="395.0" y2="165.8" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="169.8" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">375</text>
+<line x1="77.0" y1="110.0" x2="395.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<rect x="88.5" y="280.7" width="30.0" height="52.3" rx="2" fill="#778899"><title>Sequencial: 117.370 ms; 10 repetições</title></rect>
+<text x="103.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">Seq</text>
+<rect x="141.5" y="204.3" width="30.0" height="128.7" rx="2" fill="#3677b5"><title>1 threads: 288.509 ms; 10 repetições</title></rect>
+<text x="156.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="194.5" y="229.1" width="30.0" height="103.9" rx="2" fill="#e28a35"><title>2 threads: 232.888 ms; 10 repetições</title></rect>
+<text x="209.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="247.5" y="243.3" width="30.0" height="89.7" rx="2" fill="#55a868"><title>4 threads: 201.158 ms; 10 repetições</title></rect>
+<text x="262.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="300.5" y="249.8" width="30.0" height="83.2" rx="2" fill="#8b6bb1"><title>8 threads: 186.577 ms; 10 repetições</title></rect>
+<text x="315.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="353.5" y="248.7" width="30.0" height="84.3" rx="2" fill="#d64f64"><title>16 threads: 188.908 ms; 10 repetições</title></rect>
+<text x="368.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="41.0" y="221.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#596775" font-weight="normal">ms</text>
+<text x="613.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand05 2000×2000</text>
+<line x1="467.0" y1="333.0" x2="785.0" y2="333.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="337.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="467.0" y1="277.2" x2="785.0" y2="277.2" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="281.2" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">25</text>
+<line x1="467.0" y1="221.5" x2="785.0" y2="221.5" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="225.5" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">50</text>
+<line x1="467.0" y1="165.8" x2="785.0" y2="165.8" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="169.8" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">75</text>
+<line x1="467.0" y1="110.0" x2="785.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">100</text>
+<rect x="478.5" y="297.0" width="30.0" height="36.0" rx="2" fill="#778899"><title>Sequencial: 16.137 ms; 10 repetições</title></rect>
+<text x="493.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">Seq</text>
+<rect x="531.5" y="215.1" width="30.0" height="117.9" rx="2" fill="#3677b5"><title>1 threads: 52.877 ms; 10 repetições</title></rect>
+<text x="546.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="584.5" y="223.9" width="30.0" height="109.1" rx="2" fill="#e28a35"><title>2 threads: 48.943 ms; 10 repetições</title></rect>
+<text x="599.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="637.5" y="230.0" width="30.0" height="103.0" rx="2" fill="#55a868"><title>4 threads: 46.170 ms; 10 repetições</title></rect>
+<text x="652.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="690.5" y="238.5" width="30.0" height="94.5" rx="2" fill="#8b6bb1"><title>8 threads: 42.359 ms; 10 repetições</title></rect>
+<text x="705.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="743.5" y="237.0" width="30.0" height="96.0" rx="2" fill="#d64f64"><title>16 threads: 43.034 ms; 10 repetições</title></rect>
+<text x="758.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="431.0" y="221.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#596775" font-weight="normal">ms</text>
+<text x="1003.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">blocos 2000×2000</text>
+<line x1="857.0" y1="333.0" x2="1175.0" y2="333.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="337.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="857.0" y1="277.2" x2="1175.0" y2="277.2" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="281.2" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">62.5</text>
+<line x1="857.0" y1="221.5" x2="1175.0" y2="221.5" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="225.5" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="857.0" y1="165.8" x2="1175.0" y2="165.8" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="169.8" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">187.5</text>
+<line x1="857.0" y1="110.0" x2="1175.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<rect x="868.5" y="277.6" width="30.0" height="55.4" rx="2" fill="#778899"><title>Sequencial: 62.130 ms; 10 repetições</title></rect>
+<text x="883.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">Seq</text>
+<rect x="921.5" y="156.9" width="30.0" height="176.1" rx="2" fill="#3677b5"><title>1 threads: 197.453 ms; 10 repetições</title></rect>
+<text x="936.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="974.5" y="182.2" width="30.0" height="150.8" rx="2" fill="#e28a35"><title>2 threads: 169.022 ms; 10 repetições</title></rect>
+<text x="989.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="1027.5" y="176.6" width="30.0" height="156.4" rx="2" fill="#55a868"><title>4 threads: 175.358 ms; 10 repetições</title></rect>
+<text x="1042.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="1080.5" y="196.5" width="30.0" height="136.5" rx="2" fill="#8b6bb1"><title>8 threads: 153.026 ms; 10 repetições</title></rect>
+<text x="1095.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="1133.5" y="187.0" width="30.0" height="146.0" rx="2" fill="#d64f64"><title>16 threads: 163.676 ms; 10 repetições</title></rect>
+<text x="1148.5" y="350.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="821.0" y="221.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#596775" font-weight="normal">ms</text>
+<text x="223.0" y="402.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">uns 2000×2000</text>
+<line x1="77.0" y1="648.0" x2="395.0" y2="648.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="652.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="77.0" y1="592.2" x2="395.0" y2="592.2" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="596.2" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="77.0" y1="536.5" x2="395.0" y2="536.5" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="540.5" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<line x1="77.0" y1="480.8" x2="395.0" y2="480.8" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="484.8" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">375</text>
+<line x1="77.0" y1="425.0" x2="395.0" y2="425.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="429.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<rect x="88.5" y="600.6" width="30.0" height="47.4" rx="2" fill="#778899"><title>Sequencial: 106.315 ms; 10 repetições</title></rect>
+<text x="103.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">Seq</text>
+<rect x="141.5" y="493.4" width="30.0" height="154.6" rx="2" fill="#3677b5"><title>1 threads: 346.569 ms; 10 repetições</title></rect>
+<text x="156.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="194.5" y="512.7" width="30.0" height="135.3" rx="2" fill="#e28a35"><title>2 threads: 303.475 ms; 10 repetições</title></rect>
+<text x="209.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="247.5" y="519.2" width="30.0" height="128.8" rx="2" fill="#55a868"><title>4 threads: 288.880 ms; 10 repetições</title></rect>
+<text x="262.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="300.5" y="523.6" width="30.0" height="124.4" rx="2" fill="#8b6bb1"><title>8 threads: 279.034 ms; 10 repetições</title></rect>
+<text x="315.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="353.5" y="522.4" width="30.0" height="125.6" rx="2" fill="#d64f64"><title>16 threads: 281.523 ms; 10 repetições</title></rect>
+<text x="368.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="41.0" y="536.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#596775" font-weight="normal">ms</text>
+<text x="613.0" y="402.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand30 4000×4000</text>
+<line x1="467.0" y1="648.0" x2="785.0" y2="648.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="652.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="467.0" y1="592.2" x2="785.0" y2="592.2" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="596.2" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<line x1="467.0" y1="536.5" x2="785.0" y2="536.5" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="540.5" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1000</text>
+<line x1="467.0" y1="480.8" x2="785.0" y2="480.8" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="484.8" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1500</text>
+<line x1="467.0" y1="425.0" x2="785.0" y2="425.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="429.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2000</text>
+<rect x="478.5" y="591.7" width="30.0" height="56.3" rx="2" fill="#778899"><title>Sequencial: 505.149 ms; 5 repetições</title></rect>
+<text x="493.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">Seq</text>
+<rect x="531.5" y="523.6" width="30.0" height="124.4" rx="2" fill="#3677b5"><title>1 threads: 1115.710 ms; 5 repetições</title></rect>
+<text x="546.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="584.5" y="550.0" width="30.0" height="98.0" rx="2" fill="#e28a35"><title>2 threads: 879.127 ms; 5 repetições</title></rect>
+<text x="599.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="637.5" y="565.7" width="30.0" height="82.3" rx="2" fill="#55a868"><title>4 threads: 737.709 ms; 5 repetições</title></rect>
+<text x="652.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="690.5" y="569.0" width="30.0" height="79.0" rx="2" fill="#8b6bb1"><title>8 threads: 708.359 ms; 5 repetições</title></rect>
+<text x="705.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="743.5" y="571.6" width="30.0" height="76.4" rx="2" fill="#d64f64"><title>16 threads: 685.217 ms; 5 repetições</title></rect>
+<text x="758.5" y="665.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="431.0" y="536.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#596775" font-weight="normal">ms</text>
+</svg>

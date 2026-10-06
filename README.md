@@ -476,7 +476,9 @@ quantifica a causa:
 
 Detalhamento, tabelas por fase, descrição das matrizes usadas e caminho de
 otimização em [results/analise.md](results/analise.md); dados brutos (uma
-linha por execução) em [results/resultados.csv](results/resultados.csv).
+linha por execução) em [results/resultados.csv](results/resultados.csv). O CSV
+resumido por amostra e configuração, junto com os gráficos reproduzíveis, está
+na seção "Amostras e gráficos" da análise.
 
 ## 12. Decisões técnicas
 

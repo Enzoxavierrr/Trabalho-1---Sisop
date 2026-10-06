@@ -363,3 +363,25 @@ Os dados brutos desta medição (uma linha por execução, com os tempos de cada
 fase) estão em [resultados.csv](resultados.csv). As matrizes grandes não são
 versionadas (~56 MB); a descrição em "Ambiente e método" tem a densidade e a
 semente necessárias para regerá-las.
+
+## Amostras e gráficos
+
+O CSV [amostras_resumo.csv](amostras_resumo.csv) consolida as execuções por
+matriz e configuração, com medianas, número de repetições, aceleração e
+eficiência. Para a versão paralela, `tempo_mediano_ms` é a mediana do tempo
+combinado calculado em cada repetição (preparo + Fases 2–4), conforme a
+definição da métrica combinada; `tempo_csv_mediano_ms` mantém separada a
+mediana da coluna bruta `tempo_ms`. Os gráficos abaixo são gerados diretamente
+dos registros versionados em `resultados.csv` pelo script
+[gerar_graficos.py](gerar_graficos.py), usando apenas a biblioteca padrão do
+Python:
+
+![Tempo total por configuração](grafico_tempo_total.svg)
+
+![Tempos medianos por fase](grafico_fases.svg)
+
+Para regenerar os arquivos após atualizar os dados:
+
+```bash
+python results/gerar_graficos.py
+```

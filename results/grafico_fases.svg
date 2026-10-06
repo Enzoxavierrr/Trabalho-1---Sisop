@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1198" height="768" viewBox="0 0 1198 768">
+<title>Tempos medianos por fase</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="599.0" y="28.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" fill="#273444" font-weight="bold">Tempos medianos por fase</text>
+<text x="599.0" y="49.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#596775" font-weight="normal">Medianas independentes por fase (ms); as barras não representam a mediana do total</text>
+<rect x="364.0" y="61" width="12" height="12" fill="#8c9aa8"/>
+<text x="382.0" y="71.0" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#273444" font-weight="normal">Preparo</text>
+<rect x="482.0" y="61" width="12" height="12" fill="#3677b5"/>
+<text x="500.0" y="71.0" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#273444" font-weight="normal">Fase 2</text>
+<rect x="600.0" y="61" width="12" height="12" fill="#e28a35"/>
+<text x="618.0" y="71.0" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#273444" font-weight="normal">Fase 3</text>
+<rect x="718.0" y="61" width="12" height="12" fill="#55a868"/>
+<text x="736.0" y="71.0" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#273444" font-weight="normal">Fase 4</text>
+<text x="223.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand30 2000×2000</text>
+<line x1="77.0" y1="342.0" x2="395.0" y2="342.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="346.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="77.0" y1="284.0" x2="395.0" y2="284.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="288.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="77.0" y1="226.0" x2="395.0" y2="226.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="230.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<line x1="77.0" y1="168.0" x2="395.0" y2="168.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="172.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">375</text>
+<line x1="77.0" y1="110.0" x2="395.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<rect x="91.8" y="334.2" width="34.0" height="7.8" fill="#8c9aa8"><title>1 threads — Preparo: 16.723 ms</title></rect>
+<rect x="91.8" y="276.3" width="34.0" height="58.0" fill="#3677b5"><title>1 threads — Fase 2: 124.917 ms</title></rect>
+<rect x="91.8" y="226.6" width="34.0" height="49.7" fill="#e28a35"><title>1 threads — Fase 3: 107.158 ms</title></rect>
+<rect x="91.8" y="211.6" width="34.0" height="15.0" fill="#55a868"><title>1 threads — Fase 4: 32.317 ms</title></rect>
+<text x="108.8" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="155.4" y="334.4" width="34.0" height="7.6" fill="#8c9aa8"><title>2 threads — Preparo: 16.328 ms</title></rect>
+<rect x="155.4" y="303.5" width="34.0" height="31.0" fill="#3677b5"><title>2 threads — Fase 2: 66.739 ms</title></rect>
+<rect x="155.4" y="250.4" width="34.0" height="53.0" fill="#e28a35"><title>2 threads — Fase 3: 114.258 ms</title></rect>
+<rect x="155.4" y="235.0" width="34.0" height="15.4" fill="#55a868"><title>2 threads — Fase 4: 33.243 ms</title></rect>
+<text x="172.4" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="219.0" y="334.4" width="34.0" height="7.6" fill="#8c9aa8"><title>4 threads — Preparo: 16.427 ms</title></rect>
+<rect x="219.0" y="317.2" width="34.0" height="17.2" fill="#3677b5"><title>4 threads — Fase 2: 36.995 ms</title></rect>
+<rect x="219.0" y="263.6" width="34.0" height="53.7" fill="#e28a35"><title>4 threads — Fase 3: 115.648 ms</title></rect>
+<rect x="219.0" y="248.9" width="34.0" height="14.6" fill="#55a868"><title>4 threads — Fase 4: 31.506 ms</title></rect>
+<text x="236.0" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="282.6" y="334.4" width="34.0" height="7.6" fill="#8c9aa8"><title>8 threads — Preparo: 16.367 ms</title></rect>
+<rect x="282.6" y="324.1" width="34.0" height="10.3" fill="#3677b5"><title>8 threads — Fase 2: 22.207 ms</title></rect>
+<rect x="282.6" y="270.4" width="34.0" height="53.7" fill="#e28a35"><title>8 threads — Fase 3: 115.719 ms</title></rect>
+<rect x="282.6" y="255.5" width="34.0" height="14.9" fill="#55a868"><title>8 threads — Fase 4: 32.041 ms</title></rect>
+<text x="299.6" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="346.2" y="333.9" width="34.0" height="8.1" fill="#8c9aa8"><title>16 threads — Preparo: 17.369 ms</title></rect>
+<rect x="346.2" y="324.6" width="34.0" height="9.4" fill="#3677b5"><title>16 threads — Fase 2: 20.153 ms</title></rect>
+<rect x="346.2" y="269.3" width="34.0" height="55.3" fill="#e28a35"><title>16 threads — Fase 3: 119.200 ms</title></rect>
+<rect x="346.2" y="253.9" width="34.0" height="15.4" fill="#55a868"><title>16 threads — Fase 4: 33.107 ms</title></rect>
+<text x="363.2" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="613.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand05 2000×2000</text>
+<line x1="467.0" y1="342.0" x2="785.0" y2="342.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="346.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="467.0" y1="284.0" x2="785.0" y2="284.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="288.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">25</text>
+<line x1="467.0" y1="226.0" x2="785.0" y2="226.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="230.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">50</text>
+<line x1="467.0" y1="168.0" x2="785.0" y2="168.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="172.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">75</text>
+<line x1="467.0" y1="110.0" x2="785.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">100</text>
+<rect x="481.8" y="308.4" width="34.0" height="33.6" fill="#8c9aa8"><title>1 threads — Preparo: 14.492 ms</title></rect>
+<rect x="481.8" y="273.8" width="34.0" height="34.6" fill="#3677b5"><title>1 threads — Fase 2: 14.920 ms</title></rect>
+<rect x="481.8" y="242.0" width="34.0" height="31.8" fill="#e28a35"><title>1 threads — Fase 3: 13.706 ms</title></rect>
+<rect x="481.8" y="220.3" width="34.0" height="21.6" fill="#55a868"><title>1 threads — Fase 4: 9.327 ms</title></rect>
+<text x="498.8" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="545.4" y="305.1" width="34.0" height="36.9" fill="#8c9aa8"><title>2 threads — Preparo: 15.900 ms</title></rect>
+<rect x="545.4" y="283.6" width="34.0" height="21.6" fill="#3677b5"><title>2 threads — Fase 2: 9.293 ms</title></rect>
+<rect x="545.4" y="250.9" width="34.0" height="32.7" fill="#e28a35"><title>2 threads — Fase 3: 14.088 ms</title></rect>
+<rect x="545.4" y="228.4" width="34.0" height="22.5" fill="#55a868"><title>2 threads — Fase 4: 9.688 ms</title></rect>
+<text x="562.4" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="609.0" y="304.9" width="34.0" height="37.1" fill="#8c9aa8"><title>4 threads — Preparo: 15.971 ms</title></rect>
+<rect x="609.0" y="293.3" width="34.0" height="11.7" fill="#3677b5"><title>4 threads — Fase 2: 5.035 ms</title></rect>
+<rect x="609.0" y="259.6" width="34.0" height="33.6" fill="#e28a35"><title>4 threads — Fase 3: 14.495 ms</title></rect>
+<rect x="609.0" y="236.5" width="34.0" height="23.1" fill="#55a868"><title>4 threads — Fase 4: 9.957 ms</title></rect>
+<text x="626.0" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="672.6" y="308.2" width="34.0" height="33.8" fill="#8c9aa8"><title>8 threads — Preparo: 14.587 ms</title></rect>
+<rect x="672.6" y="300.9" width="34.0" height="7.3" fill="#3677b5"><title>8 threads — Fase 2: 3.147 ms</title></rect>
+<rect x="672.6" y="266.6" width="34.0" height="34.2" fill="#e28a35"><title>8 threads — Fase 3: 14.759 ms</title></rect>
+<rect x="672.6" y="243.3" width="34.0" height="23.3" fill="#55a868"><title>8 threads — Fase 4: 10.052 ms</title></rect>
+<text x="689.6" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="736.2" y="308.1" width="34.0" height="33.9" fill="#8c9aa8"><title>16 threads — Preparo: 14.616 ms</title></rect>
+<rect x="736.2" y="302.0" width="34.0" height="6.1" fill="#3677b5"><title>16 threads — Fase 2: 2.620 ms</title></rect>
+<rect x="736.2" y="267.8" width="34.0" height="34.2" fill="#e28a35"><title>16 threads — Fase 3: 14.762 ms</title></rect>
+<rect x="736.2" y="244.8" width="34.0" height="23.0" fill="#55a868"><title>16 threads — Fase 4: 9.907 ms</title></rect>
+<text x="753.2" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="1003.0" y="87.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">blocos 2000×2000</text>
+<line x1="857.0" y1="342.0" x2="1175.0" y2="342.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="346.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="857.0" y1="284.0" x2="1175.0" y2="284.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="288.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">62.5</text>
+<line x1="857.0" y1="226.0" x2="1175.0" y2="226.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="230.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="857.0" y1="168.0" x2="1175.0" y2="168.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="172.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">187.5</text>
+<line x1="857.0" y1="110.0" x2="1175.0" y2="110.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="850.0" y="114.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<rect x="871.8" y="327.2" width="34.0" height="14.8" fill="#8c9aa8"><title>1 threads — Preparo: 15.928 ms</title></rect>
+<rect x="871.8" y="266.7" width="34.0" height="60.6" fill="#3677b5"><title>1 threads — Fase 2: 65.250 ms</title></rect>
+<rect x="871.8" y="169.9" width="34.0" height="96.8" fill="#e28a35"><title>1 threads — Fase 3: 104.264 ms</title></rect>
+<rect x="871.8" y="160.3" width="34.0" height="9.6" fill="#55a868"><title>1 threads — Fase 4: 10.390 ms</title></rect>
+<text x="888.8" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="935.4" y="325.4" width="34.0" height="16.6" fill="#8c9aa8"><title>2 threads — Preparo: 17.854 ms</title></rect>
+<rect x="935.4" y="290.0" width="34.0" height="35.4" fill="#3677b5"><title>2 threads — Fase 2: 38.173 ms</title></rect>
+<rect x="935.4" y="189.6" width="34.0" height="100.4" fill="#e28a35"><title>2 threads — Fase 3: 108.181 ms</title></rect>
+<rect x="935.4" y="180.1" width="34.0" height="9.5" fill="#55a868"><title>2 threads — Fase 4: 10.288 ms</title></rect>
+<text x="952.4" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="999.0" y="325.8" width="34.0" height="16.2" fill="#8c9aa8"><title>4 threads — Preparo: 17.417 ms</title></rect>
+<rect x="999.0" y="306.5" width="34.0" height="19.4" fill="#3677b5"><title>4 threads — Fase 2: 20.873 ms</title></rect>
+<rect x="999.0" y="188.0" width="34.0" height="118.4" fill="#e28a35"><title>4 threads — Fase 3: 127.606 ms</title></rect>
+<rect x="999.0" y="178.1" width="34.0" height="10.0" fill="#55a868"><title>4 threads — Fase 4: 10.763 ms</title></rect>
+<text x="1016.0" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="1062.6" y="328.8" width="34.0" height="13.2" fill="#8c9aa8"><title>8 threads — Preparo: 14.272 ms</title></rect>
+<rect x="1062.6" y="317.3" width="34.0" height="11.5" fill="#3677b5"><title>8 threads — Fase 2: 12.370 ms</title></rect>
+<rect x="1062.6" y="208.6" width="34.0" height="108.7" fill="#e28a35"><title>8 threads — Fase 3: 117.142 ms</title></rect>
+<rect x="1062.6" y="199.2" width="34.0" height="9.4" fill="#55a868"><title>8 threads — Fase 4: 10.080 ms</title></rect>
+<text x="1079.6" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="1126.2" y="326.5" width="34.0" height="15.5" fill="#8c9aa8"><title>16 threads — Preparo: 16.729 ms</title></rect>
+<rect x="1126.2" y="315.2" width="34.0" height="11.3" fill="#3677b5"><title>16 threads — Fase 2: 12.140 ms</title></rect>
+<rect x="1126.2" y="199.7" width="34.0" height="115.5" fill="#e28a35"><title>16 threads — Fase 3: 124.502 ms</title></rect>
+<rect x="1126.2" y="189.9" width="34.0" height="9.8" fill="#55a868"><title>16 threads — Fase 4: 10.563 ms</title></rect>
+<text x="1143.2" y="359.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="223.0" y="422.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">uns 2000×2000</text>
+<line x1="77.0" y1="677.0" x2="395.0" y2="677.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="681.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="77.0" y1="619.0" x2="395.0" y2="619.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="623.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">125</text>
+<line x1="77.0" y1="561.0" x2="395.0" y2="561.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="565.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">250</text>
+<line x1="77.0" y1="503.0" x2="395.0" y2="503.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="507.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">375</text>
+<line x1="77.0" y1="445.0" x2="395.0" y2="445.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="70.0" y="449.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<rect x="91.8" y="669.4" width="34.0" height="7.6" fill="#8c9aa8"><title>1 threads — Preparo: 16.291 ms</title></rect>
+<rect x="91.8" y="610.4" width="34.0" height="59.0" fill="#3677b5"><title>1 threads — Fase 2: 127.259 ms</title></rect>
+<rect x="91.8" y="520.2" width="34.0" height="90.2" fill="#e28a35"><title>1 threads — Fase 3: 194.403 ms</title></rect>
+<rect x="91.8" y="516.0" width="34.0" height="4.2" fill="#55a868"><title>1 threads — Fase 4: 8.976 ms</title></rect>
+<text x="108.8" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="155.4" y="669.9" width="34.0" height="7.1" fill="#8c9aa8"><title>2 threads — Preparo: 15.314 ms</title></rect>
+<rect x="155.4" y="637.4" width="34.0" height="32.4" fill="#3677b5"><title>2 threads — Fase 2: 69.931 ms</title></rect>
+<rect x="155.4" y="540.5" width="34.0" height="96.9" fill="#e28a35"><title>2 threads — Fase 3: 208.846 ms</title></rect>
+<rect x="155.4" y="536.0" width="34.0" height="4.5" fill="#55a868"><title>2 threads — Fase 4: 9.736 ms</title></rect>
+<text x="172.4" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="219.0" y="668.9" width="34.0" height="8.1" fill="#8c9aa8"><title>4 threads — Preparo: 17.401 ms</title></rect>
+<rect x="219.0" y="651.8" width="34.0" height="17.2" fill="#3677b5"><title>4 threads — Fase 2: 36.978 ms</title></rect>
+<rect x="219.0" y="546.5" width="34.0" height="105.3" fill="#e28a35"><title>4 threads — Fase 3: 226.845 ms</title></rect>
+<rect x="219.0" y="541.9" width="34.0" height="4.6" fill="#55a868"><title>4 threads — Fase 4: 9.942 ms</title></rect>
+<text x="236.0" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="282.6" y="670.1" width="34.0" height="6.9" fill="#8c9aa8"><title>8 threads — Preparo: 14.921 ms</title></rect>
+<rect x="282.6" y="658.3" width="34.0" height="11.8" fill="#3677b5"><title>8 threads — Fase 2: 25.428 ms</title></rect>
+<rect x="282.6" y="552.1" width="34.0" height="106.2" fill="#e28a35"><title>8 threads — Fase 3: 228.785 ms</title></rect>
+<rect x="282.6" y="547.0" width="34.0" height="5.1" fill="#55a868"><title>8 threads — Fase 4: 11.009 ms</title></rect>
+<text x="299.6" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="346.2" y="670.4" width="34.0" height="6.6" fill="#8c9aa8"><title>16 threads — Preparo: 14.310 ms</title></rect>
+<rect x="346.2" y="661.9" width="34.0" height="8.5" fill="#3677b5"><title>16 threads — Fase 2: 18.285 ms</title></rect>
+<rect x="346.2" y="550.9" width="34.0" height="110.9" fill="#e28a35"><title>16 threads — Fase 3: 239.096 ms</title></rect>
+<rect x="346.2" y="545.9" width="34.0" height="5.0" fill="#55a868"><title>16 threads — Fase 4: 10.822 ms</title></rect>
+<text x="363.2" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+<text x="613.0" y="422.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#273444" font-weight="bold">rand30 4000×4000</text>
+<line x1="467.0" y1="677.0" x2="785.0" y2="677.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="681.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">0</text>
+<line x1="467.0" y1="619.0" x2="785.0" y2="619.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="623.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">500</text>
+<line x1="467.0" y1="561.0" x2="785.0" y2="561.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="565.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1000</text>
+<line x1="467.0" y1="503.0" x2="785.0" y2="503.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="507.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1500</text>
+<line x1="467.0" y1="445.0" x2="785.0" y2="445.0" stroke="#dce2e8" stroke-width="1"/>
+<text x="460.0" y="449.0" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2000</text>
+<rect x="481.8" y="669.4" width="34.0" height="7.6" fill="#8c9aa8"><title>1 threads — Preparo: 65.773 ms</title></rect>
+<rect x="481.8" y="612.6" width="34.0" height="56.8" fill="#3677b5"><title>1 threads — Fase 2: 489.506 ms</title></rect>
+<rect x="481.8" y="562.7" width="34.0" height="49.9" fill="#e28a35"><title>1 threads — Fase 3: 429.968 ms</title></rect>
+<rect x="481.8" y="549.1" width="34.0" height="13.6" fill="#55a868"><title>1 threads — Fase 4: 117.179 ms</title></rect>
+<text x="498.8" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">1t</text>
+<rect x="545.4" y="669.5" width="34.0" height="7.5" fill="#8c9aa8"><title>2 threads — Preparo: 64.913 ms</title></rect>
+<rect x="545.4" y="638.8" width="34.0" height="30.7" fill="#3677b5"><title>2 threads — Fase 2: 264.281 ms</title></rect>
+<rect x="545.4" y="590.1" width="34.0" height="48.7" fill="#e28a35"><title>2 threads — Fase 3: 419.798 ms</title></rect>
+<rect x="545.4" y="576.1" width="34.0" height="14.0" fill="#55a868"><title>2 threads — Fase 4: 120.924 ms</title></rect>
+<text x="562.4" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">2t</text>
+<rect x="609.0" y="669.7" width="34.0" height="7.3" fill="#8c9aa8"><title>4 threads — Preparo: 63.306 ms</title></rect>
+<rect x="609.0" y="653.2" width="34.0" height="16.5" fill="#3677b5"><title>4 threads — Fase 2: 142.102 ms</title></rect>
+<rect x="609.0" y="604.7" width="34.0" height="48.5" fill="#e28a35"><title>4 threads — Fase 3: 418.147 ms</title></rect>
+<rect x="609.0" y="590.6" width="34.0" height="14.0" fill="#55a868"><title>4 threads — Fase 4: 121.053 ms</title></rect>
+<text x="626.0" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">4t</text>
+<rect x="672.6" y="669.5" width="34.0" height="7.5" fill="#8c9aa8"><title>8 threads — Preparo: 64.547 ms</title></rect>
+<rect x="672.6" y="658.6" width="34.0" height="10.9" fill="#3677b5"><title>8 threads — Fase 2: 93.703 ms</title></rect>
+<rect x="672.6" y="609.6" width="34.0" height="49.0" fill="#e28a35"><title>8 threads — Fase 3: 422.744 ms</title></rect>
+<rect x="672.6" y="595.2" width="34.0" height="14.4" fill="#55a868"><title>8 threads — Fase 4: 123.850 ms</title></rect>
+<text x="689.6" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">8t</text>
+<rect x="736.2" y="669.9" width="34.0" height="7.1" fill="#8c9aa8"><title>16 threads — Preparo: 61.296 ms</title></rect>
+<rect x="736.2" y="662.0" width="34.0" height="7.9" fill="#3677b5"><title>16 threads — Fase 2: 67.900 ms</title></rect>
+<rect x="736.2" y="611.9" width="34.0" height="50.1" fill="#e28a35"><title>16 threads — Fase 3: 432.309 ms</title></rect>
+<rect x="736.2" y="597.2" width="34.0" height="14.7" fill="#55a868"><title>16 threads — Fase 4: 126.809 ms</title></rect>
+<text x="753.2" y="694.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#273444" font-weight="normal">16t</text>
+</svg>
