@@ -4,10 +4,7 @@
 **Professor:** Filipo Mór
 **Instituição:** PUCRS — Escola Politécnica
 
-## Autores
-
-- Enzo Xavier — _matrícula a preencher_
-- _Colega da dupla — a preencher_
+Autoria e matrículas: ver o relatório técnico em [`results/analise.md`](results/analise.md).
 
 ---
 
@@ -150,7 +147,6 @@ Trabalho-1---Sisop/
 │       ├── dsu.h
 │       └── dsu.c
 ├── tests/                 ← matrizes de teste (formato .c)
-│   ├── m1_5x5.c         (3 objetos)
 │   ├── m2_6x8.c         (4 objetos)
 │   ├── m3_8x8.c         (5 objetos)
 │   ├── m4_9x12.c        (6 objetos)
@@ -403,12 +399,11 @@ Usamos duas otimizações fundamentais:
 
 ## 10. Testes obrigatórios e resultados
 
-Todas as 5 matrizes obrigatórias do enunciado + 3 tabelas 10×10 do editor
-do professor **passam** em ambas as versões:
+Matrizes do enunciado (m2–m5) + 3 tabelas 10×10 do editor do professor
+**passam** em ambas as versões:
 
 | Arquivo | Dimensões | Esperado | Sequencial | Paralelo (2t) | Paralelo (4t, 2×2) | Paralelo (4t, 3×3) |
 |---|---|---|---|---|---|---|
-| `m1_5x5.c`         | 5×5    | 3 | ✅ 3 | ✅ 3 | ✅ 3 | ✅ 3 |
 | `m2_6x8.c`         | 6×8    | 4 | ✅ 4 | ✅ 4 | ✅ 4 | ✅ 4 |
 | `m3_8x8.c`         | 8×8    | 5 | ✅ 5 | ✅ 5 | ✅ 5 | ✅ 5 |
 | `m4_9x12.c`        | 9×12   | 6 | ✅ 6 | ✅ 6 | ✅ 6 | ✅ 6 |
